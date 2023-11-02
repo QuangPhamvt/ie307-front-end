@@ -39,7 +39,7 @@ const RegisterFormComponent = (props: RegisterFormComponentProps) => {
     </>
   )
 }
-export const RegisterScreen = (props: RegisterScreenProps) => {
+const RegisterScreen = (props: RegisterScreenProps) => {
   const { navigation } = props
   return (
     <SafeAreaView className="flex h-full w-full gap-y-4" onTouchStart={() => Keyboard.dismiss()}>
@@ -53,3 +53,4 @@ export const RegisterScreen = (props: RegisterScreenProps) => {
     </SafeAreaView>
   )
 }
+export default RegisterScreen

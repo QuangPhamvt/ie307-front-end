@@ -39,7 +39,7 @@ const AuthNavigationComponent: React.FC<Partial<AuthNavigationProps>> = (props) 
     </View>
   )
 }
-export const DashboardScreen = (props: DashboardScreenProps) => {
+const DashboardScreen = (props: DashboardScreenProps) => {
   const { navigation } = props
   return (
     <SafeAreaView className="flex h-full w-full justify-around gap-y-4 bg-transparent">
@@ -50,3 +50,4 @@ export const DashboardScreen = (props: DashboardScreenProps) => {
     </SafeAreaView>
   )
 }
+export default DashboardScreen

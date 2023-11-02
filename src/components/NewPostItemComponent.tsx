@@ -1,9 +1,11 @@
 import React from "react"
-import { View, Image, Text } from "react-native"
+import { View, Image, Text, TouchableOpacity, Touchable } from "react-native"
+import { HomeTabScreenProps } from "../screen/type"
+import { useNavigation } from "@react-navigation/native"
 
 type NewPostItemComponentProps = {
   uri: string
-}
+} & HomeTabScreenProps<"Main">
 
 interface AvatarComponentProps {
   width: number
@@ -28,13 +30,24 @@ const AvatarComponent: React.FC<AvatarComponentProps> = (props) => {
     </View>
   )
 }
-export const NewPostItemComponent: React.FC<NewPostItemComponentProps> = (props) => {
+export const NewPostItemComponent: React.FC<Partial<NewPostItemComponentProps>> = (props) => {
   const { uri } = props
+  const navigation = useNavigation()
+  const lastTap = React.useRef<number>(0)
+  const handleDoubleTap = () => {
+    const now = Date.now()
+    const DELAY = 500
+    if (lastTap.current && now - lastTap.current < DELAY) {
+      navigation?.navigate("Story")
+    } else lastTap.current = now
+  }
   return (
     <View className="flex aspect-square w-screen items-center justify-around ">
-      <View className="aspect-square w-[calc(85%)]">
-        <Image className="h-full w-full" source={{ uri }} />
-      </View>
+      <TouchableOpacity activeOpacity={0.9} onPress={handleDoubleTap}>
+        <View className="aspect-square w-[calc(85%)]">
+          <Image className="h-full w-full" source={{ uri }} />
+        </View>
+      </TouchableOpacity>
       <View className="h-[calc(15%)] w-[calc(85%)] justify-center ">
         <AvatarComponent width={42} height={42} />
       </View>
