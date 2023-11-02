@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient"
 interface HomeScreenProps extends RootNativeStackScreenProps<"Home"> {}
 const Tab = createBottomTabNavigator<HomeTabParamList>()
 
-export const HomeScreen = (props: HomeScreenProps) => {
+const HomeScreen = (props: HomeScreenProps) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -21,7 +21,7 @@ export const HomeScreen = (props: HomeScreenProps) => {
             return (
               <View
                 className={`flex h-full w-full items-center justify-center ${
-                  focused ? "border-t-[1px] border-black" : ""
+                  focused ? "border-t-[1px] border-t-black" : ""
                 }`}
               >
                 <Feather name="home" size={24} color={focused ? "#000" : "#ccc"} />
@@ -31,7 +31,7 @@ export const HomeScreen = (props: HomeScreenProps) => {
             return (
               <View
                 className={`flex h-full w-full items-center justify-center ${
-                  focused ? "border-t-[1px] border-black" : ""
+                  focused ? "border-t-[1px] border-t-black" : ""
                 }`}
               >
                 <Feather name="search" size={24} color={focused ? "#000" : "#ccc"} />
@@ -52,7 +52,7 @@ export const HomeScreen = (props: HomeScreenProps) => {
             return (
               <View
                 className={`flex h-full w-full items-center justify-center ${
-                  focused ? "border-t-[1px] border-black" : ""
+                  focused ? "border-t-[1px] border-t-black" : ""
                 }`}
               >
                 <Feather name="message-circle" size={24} color={focused ? "#000" : "#ccc"} />
@@ -62,7 +62,7 @@ export const HomeScreen = (props: HomeScreenProps) => {
             return (
               <View
                 className={`flex h-full w-full items-center justify-center ${
-                  focused ? "border-t-[1px] border-black" : ""
+                  focused ? "border-t-[1px] border-t-black" : ""
                 }`}
               >
                 <Feather name="user" size={24} color={focused ? "#000" : "#ccc"} />
@@ -88,3 +88,4 @@ export const HomeScreen = (props: HomeScreenProps) => {
     </Tab.Navigator>
   )
 }
+export default HomeScreen

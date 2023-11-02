@@ -7,8 +7,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "format": "bun prettier ./component/**/*{.tsx,.ts} --check",
-    "format:fix": "bun prettier ./component/**/*{.tsx,.ts} --write"
+    "format": "bun prettier ./src/**/*{.tsx,.ts} --check",
+    "format:fix": "bun prettier ./src/**/*{.tsx,.ts} --write",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
@@ -30,7 +31,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@commitlint/cli": "^18.2.0",
+    "@commitlint/config-conventional": "^18.1.0",
     "@types/react": "~18.2.14",
+    "husky": "^8.0.0",
     "prettier-plugin-tailwindcss": "^0.5.6",
     "tailwindcss": "3.3.2",
     "typescript": "^5.1.3"

@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, SafeAreaView, TextInput, Image, FlatList } from "react-native"
+import { ScrollView, VirtualizedList, View, Text, SafeAreaView, TextInput, Image, FlatList } from "react-native"
 import { HomeTabScreenProps } from "../type"
 import React from "react"
 
@@ -71,7 +71,11 @@ interface PostItemSearchProps {
 }
 const PostItemSearch: React.FC<PostItemSearchProps> = (props) => {
   const { uri } = props
-  return <Image className="m-2 mx-auto aspect-square w-[30%] border-[1px]" source={{ uri }} />
+  return (
+    <View className="m-2 mx-auto aspect-square w-[30%] border-[1px]">
+      <Image className="h-full w-full" source={{ uri }} />
+    </View>
+  )
 }
 const PostListSearch: React.FC<PostListSearchProps> = () => {
   return (
@@ -87,8 +91,8 @@ const PostListSearch: React.FC<PostListSearchProps> = () => {
 }
 export const SearchScreen: React.FC<SearchScreenProps> = () => {
   return (
-    <SafeAreaView className="m-[16px_16px_0_16px] flex gap-y-2">
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <SafeAreaView className="flex w-full gap-y-2 bg-black">
+      <ScrollView showsVerticalScrollIndicator={false} className="bg-white px-4">
         <View className="py-4">
           <Text className="text-5xl font-light">Search</Text>
         </View>

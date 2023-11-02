@@ -56,7 +56,7 @@ const BrowseImageItemComponent: React.FC<Partial<BrowseImageItemComponentProps>>
   const heightImage = aspectHeight < 0.5 ? 220 : 310
   return (
     <Image
-      className="m-1 rounded-md border-[1px] border-slate-400 object-contain"
+      className="m-1 rounded-md border-[1px] object-contain"
       height={heightImage}
       source={{ uri: item?.uri || "" }}
     />

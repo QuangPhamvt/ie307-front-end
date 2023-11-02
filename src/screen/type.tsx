@@ -7,6 +7,7 @@ export type RootNativeStackParamList = {
   Login: undefined
   Register: undefined
   Home: NavigatorScreenParams<HomeTabParamList>
+  Story: undefined
 }
 export type RootNativeStackScreenProps<T extends keyof RootNativeStackParamList> = NativeStackScreenProps<
   RootNativeStackParamList,

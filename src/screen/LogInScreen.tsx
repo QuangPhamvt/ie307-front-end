@@ -14,7 +14,7 @@ const LogInFormComponent = (props: LogInFormComponentProps) => {
     </View>
   )
 }
-export const LogInScreen = (props: LogInScreenProps) => {
+const LogInScreen = (props: LogInScreenProps) => {
   const { navigation } = props
   return (
     <SafeAreaView className="flex h-full w-full gap-y-4" onTouchStart={() => Keyboard.dismiss()}>
@@ -28,3 +28,4 @@ export const LogInScreen = (props: LogInScreenProps) => {
     </SafeAreaView>
   )
 }
+export default LogInScreen

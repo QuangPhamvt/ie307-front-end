@@ -4,7 +4,9 @@ import { BrowseComponent, NewPostListComponent } from "../../components"
 import { HomeTabScreenProps } from "../type"
 
 interface MainScreenProps extends HomeTabScreenProps<"Main"> {}
-const HeaderMainComponent = () => {
+interface HeaderMainComponentProps extends HomeTabScreenProps<"Main"> {}
+const HeaderMainComponent: React.FC<Partial<HeaderMainComponentProps>> = (props) => {
+  const {} = props
   return (
     <View>
       <View className="m-4 flex">
