@@ -1,10 +1,13 @@
 import React from "react"
 import { HomeTabScreenProps, RootNativeStackScreenProps } from "../type"
 import { Image, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { useUserAction } from "../../hooks"
+import { useNavigation } from "@react-navigation/native"
 
 interface ProfileScreenProps extends HomeTabScreenProps<"Profile"> {}
 interface HeaderProfileComponentProps extends HomeTabScreenProps<"Profile"> {}
 export const HeaderProfileComponent = () => {
+  const userAction = useUserAction()
   return (
     <View className="flex w-full items-center justify-center gap-y-4 pt-8">
       <View className="flex items-center justify-center">
@@ -26,12 +29,19 @@ export const HeaderProfileComponent = () => {
         <TouchableOpacity className="w-full rounded-lg border-2 border-black bg-white p-3">
           <Text className="text-center text-xl font-bold text-black">MESSAGE</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            userAction.logOut()
+          }}
+          className="w-full rounded-lg border-2 border-gray-500 bg-gray-300 p-1"
+        >
+          <Text className="text-center text-base font-medium text-black">Log Out</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
 }
 export const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
-  const { navigation } = props
   return (
     <SafeAreaView className="bg-black">
       <ScrollView className="h-full w-full bg-white p-4">

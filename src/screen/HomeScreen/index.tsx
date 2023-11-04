@@ -8,10 +8,13 @@ import { ChatScreen } from "./Chat"
 import { UploadScreen } from "./Upload"
 import { TouchableOpacity, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
+import { useImageUpload } from "./Upload/hook"
+import { useRoute } from "@react-navigation/native"
 interface HomeScreenProps extends RootNativeStackScreenProps<"Home"> {}
 const Tab = createBottomTabNavigator<HomeTabParamList>()
 
 const HomeScreen = (props: HomeScreenProps) => {
+  const Route = useRoute()
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

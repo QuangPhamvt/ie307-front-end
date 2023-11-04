@@ -12,14 +12,13 @@ interface AuthNavigationProps extends RootNativeStackScreenProps<"Dashboard"> {
 interface DashboardScreenProps extends RootNativeStackScreenProps<"Dashboard"> {}
 
 const AuthBackGroundComponent: React.FC<Partial<AuthBackGroundProps>> = (props) => {
-  const { className } = props
   return <Image className="h-full w-full" source={require("../../assets/bg-auth.webp")} />
 }
 
 const AuthNavigationComponent: React.FC<Partial<AuthNavigationProps>> = (props) => {
   const { className, navigation } = props
   return (
-    <View className={className + "flex flex-row items-center justify-around "}>
+    <View className={className + "flex flex-row items-center justify-around pb-2"}>
       <TouchableOpacity
         className="w-5/12 rounded-md border-[1px] p-4"
         onPress={() => {
@@ -42,11 +41,13 @@ const AuthNavigationComponent: React.FC<Partial<AuthNavigationProps>> = (props) 
 const DashboardScreen = (props: DashboardScreenProps) => {
   const { navigation } = props
   return (
-    <SafeAreaView className="flex h-full w-full justify-around gap-y-4 bg-transparent">
-      <View className="mb-4 shrink">
-        <AuthBackGroundComponent className="" />
+    <SafeAreaView className="flex h-full w-full justify-around  bg-black">
+      <View className="flex h-full w-full justify-center bg-transparent bg-white">
+        <View className="mb-2 shrink">
+          <AuthBackGroundComponent />
+        </View>
+        <AuthNavigationComponent className="shrink-0 " navigation={navigation} />
       </View>
-      <AuthNavigationComponent className="shrink-0" navigation={navigation} />
     </SafeAreaView>
   )
 }
