@@ -27,7 +27,7 @@ curl -fsSL https://bun.sh/install | bash
 1. Clone the repo
 
 ```bash
-git clone git@github.com:QuangPhamvt/ie307-back-end.git
+git clone git@github.com:QuangPhamvt/ie307-front-end.git
 ```
 
 2. Install yarn packages

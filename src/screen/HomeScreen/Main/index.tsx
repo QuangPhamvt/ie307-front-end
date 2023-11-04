@@ -1,7 +1,7 @@
 import React from "react"
 import { ScrollView, View, Text, SafeAreaView } from "react-native"
-import { BrowseComponent, NewPostListComponent } from "../../components"
-import { HomeTabScreenProps } from "../type"
+import { BrowseComponent, NewPostListComponent } from "../../../components"
+import { HomeTabScreenProps } from "../../type"
 
 interface MainScreenProps extends HomeTabScreenProps<"Main"> {}
 interface HeaderMainComponentProps extends HomeTabScreenProps<"Main"> {}

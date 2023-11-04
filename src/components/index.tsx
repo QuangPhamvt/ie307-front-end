@@ -1,3 +1,5 @@
 export * from "./NewPostItemComponent"
 export * from "./NewPostListComponent"
 export * from "./BrowseComponent"
+export * from "./LogInComponent"
+export * from "./RegisterFormComponent"
