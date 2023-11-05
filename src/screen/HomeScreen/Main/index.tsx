@@ -2,6 +2,9 @@ import React from "react"
 import { ScrollView, View, Text, SafeAreaView } from "react-native"
 import { BrowseComponent, NewPostListComponent } from "../../../components"
 import { HomeTabScreenProps } from "../../type"
+import { usePostList } from "./store/customHook"
+import { useRecoilValue } from "recoil"
+import { postListState } from "./store"
 
 interface MainScreenProps extends HomeTabScreenProps<"Main"> {}
 interface HeaderMainComponentProps extends HomeTabScreenProps<"Main"> {}
@@ -20,6 +23,10 @@ const HeaderMainComponent: React.FC<Partial<HeaderMainComponentProps>> = (props)
 }
 export const MainScreen: React.FC<MainScreenProps> = (props) => {
   const {} = props
+  const { handleGetPostList } = usePostList()
+  React.useEffect(() => {
+    handleGetPostList()
+  }, [])
   return (
     <SafeAreaView className="bg-black">
       <ScrollView className="bg-white">
