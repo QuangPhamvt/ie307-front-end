@@ -42,32 +42,19 @@ export const useGetImageUpload = () => {
   return { image, selectImage }
 }
 export const useImageUpload = () => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [updateState, setUpadeState] = React.useState<"idle" | "updating" | "success">("idle")
   const handleUpload = React.useCallback(async (title: string, uri: string) => {
     try {
-      setIsLoading(true)
-      const data = await fetch(uri).then((res) => res.blob())
-      // const file = new File([blob], {
-      //   uri: uri,
-      //   type: "image/jpeg",
-      //   name: "test.jpg",
-      // })
+      setUpadeState("updating")
+      const base64String = await FileSystem.readAsStringAsync(uri, { encoding: "base64", length: 9999999 })
+      console.log(base64String)
+      const image = "data:image/jpeg;base64," + base64String
 
-      // const data = await response
-      // console.log("data: ", data)
-      const metadata = {
-        type: data.type,
-      }
-      // const file = new File([data], "test.jpg", { ...metadata, lastModified: new Date().getTime() })
-      const file = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 })
-      const test = "data:image/jpeg;base64," + file
-      console.log(test)
-
-      if (uri && data) await postApi.uploadPost({ title, image: test })
-      setIsLoading(false)
+      if (uri && image) await postApi.uploadPost({ title, image })
+      setUpadeState("success")
     } catch (error) {
       console.log(error)
     }
   }, [])
-  return { isLoading, handleUpload }
+  return { updateState, setUpadeState, handleUpload }
 }

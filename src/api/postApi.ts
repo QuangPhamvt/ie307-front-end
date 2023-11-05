@@ -1,8 +1,9 @@
+import { TPostItem } from "../screen/HomeScreen/Main/store/atom"
 import { axiosClient } from "./axiosClient"
 import { PATH } from "./path"
 
 export const postApi = {
-  postList: <T extends { limit: string; page: string }>(payload: T): Promise<any> => {
+  postList: <T extends { limit: number; page: number }>(payload: T): Promise<any> => {
     const url = `${PATH.POST}`
     return axiosClient.post(url, { postList: payload })
   },

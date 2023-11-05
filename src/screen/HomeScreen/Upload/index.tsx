@@ -14,6 +14,7 @@ import { HomeTabScreenProps } from "../../type"
 import * as ImagePicker from "expo-image-picker"
 import { useGetImageUpload, useImageUpload } from "./hook"
 import { useDoubleTap } from "../../../hooks"
+import { Ionicons, SimpleLineIcons } from "@expo/vector-icons"
 
 interface UploadScreenProps extends HomeTabScreenProps<"Upload"> {}
 
@@ -29,14 +30,29 @@ const imagePicker = async (library: boolean) => {
     if (!result.canceled) return result.assets[0].uri
   }
 }
-const UploadImageComponent: React.FC<{ imageUri: string; onSetUploadImage: () => void }> = (props) => {
-  const { imageUri, onSetUploadImage } = props
+const UploadImageComponent: React.FC<{
+  imageUri: string
+  onSetUploadImage: () => void
+  updateState: "idle" | "updating" | "success"
+  onSetUpdateState: (state: "idle" | "success" | "updating") => void
+}> = (props) => {
+  const { imageUri, onSetUploadImage, updateState, onSetUpdateState } = props
   const { handleDoubleTap } = useDoubleTap(onSetUploadImage, 500)
   return (
     <>
       <View className="mt-12 flex aspect-square h-1/2 items-center justify-center rounded-md border-2 border-gray-600 ">
-        <TouchableOpacity className="h-full w-full " onPress={handleDoubleTap}>
-          {imageUri ? <Image source={{ uri: imageUri }} className="h-full w-full rounded-md" /> : <Text>None</Text>}
+        <TouchableOpacity
+          className="flex h-full w-full items-center justify-center"
+          onPress={() => {
+            onSetUpdateState("idle")
+            handleDoubleTap()
+          }}
+        >
+          {imageUri && updateState === "idle" && (
+            <Image source={{ uri: imageUri }} className="h-full w-full rounded-md" />
+          )}
+          {imageUri && updateState === "success" && <Ionicons name="checkmark-sharp" size={42} />}
+          {!imageUri && <SimpleLineIcons name="cloud-upload" size={42} />}
         </TouchableOpacity>
       </View>
     </>
@@ -45,7 +61,7 @@ const UploadImageComponent: React.FC<{ imageUri: string; onSetUploadImage: () =>
 export const UploadScreen: React.FC = () => {
   const { image, selectImage } = useGetImageUpload()
   const [title, setTitle] = React.useState<string>("")
-  const { isLoading, handleUpload } = useImageUpload()
+  const { updateState, setUpadeState, handleUpload } = useImageUpload()
   const buttonAlert = React.useCallback(
     () =>
       Alert.alert("Upload", "Choose an upload method", [
@@ -67,7 +83,12 @@ export const UploadScreen: React.FC = () => {
   return (
     <SafeAreaView className="h-screen w-screen bg-black">
       <View className="flex h-full w-full items-center bg-white p-4" onTouchStart={() => Keyboard.dismiss()}>
-        <UploadImageComponent onSetUploadImage={buttonAlert} imageUri={image} />
+        <UploadImageComponent
+          onSetUpdateState={setUpadeState}
+          updateState={updateState}
+          onSetUploadImage={buttonAlert}
+          imageUri={image}
+        />
         <View className="mt-8 flex w-full items-center">
           <TextInput
             className="w-3/4 rounded-lg border-2 border-black p-2 text-center"
@@ -78,7 +99,7 @@ export const UploadScreen: React.FC = () => {
             className="mt-4 w-3/4 rounded-md border-2 border-black p-4"
             onPress={() => handleUpload(title, image)}
           >
-            {isLoading ? (
+            {updateState === "updating" ? (
               <ActivityIndicator size={"large"} />
             ) : (
               <Text className="text-center text-2xl font-bold">Upload</Text>
