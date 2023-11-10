@@ -7,14 +7,10 @@ import RegisterScreen from "./RegisterScreen"
 import HomeScreen from "./HomeScreen"
 import StoryScreen from "./StoryScreen"
 import { RootNativeStackParamList } from "./type"
-import { authState } from "../recoil/atom"
-import { useWebSocket } from "../websocket"
-import { Text } from "react-native"
-
-export * from "./LogInScreen"
-export * from "./DashboardScreen"
-export * from "./RegisterScreen"
-export * from "./HomeScreen"
+import { authState } from "~/src/recoil/atom"
+import { useWebSocket } from "~/src/websocket"
+import MessageScreen from "./MessageScreen"
+import { MessageScreenHeader } from "./MessageScreen/components"
 
 const Stack = createNativeStackNavigator<RootNativeStackParamList>()
 const Screen: React.FC = () => {
@@ -22,7 +18,7 @@ const Screen: React.FC = () => {
   console.log("AuthData", auth)
   useWebSocket(auth.data.id)
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Message">
       {auth.state === "hasValue" ? (
         <>
           <Stack.Screen name="Home" component={HomeScreen} options={{ animation: "fade_from_bottom" }} />
@@ -33,6 +29,11 @@ const Screen: React.FC = () => {
           <Stack.Screen name="Dashboard" component={DashboardScreen} />
           <Stack.Screen name="Login" component={LogInScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen
+            name="Message"
+            component={MessageScreen}
+            options={{ headerShown: true, header: () => <MessageScreenHeader /> }}
+          />
         </>
       )}
     </Stack.Navigator>
