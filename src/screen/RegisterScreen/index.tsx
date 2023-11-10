@@ -1,6 +1,6 @@
 import React from "react"
 import { Ionicons } from "@expo/vector-icons"
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Keyboard } from "react-native"
+import { SafeAreaView, View, Text, Keyboard } from "react-native"
 import { RootNativeStackScreenProps } from "../type"
 import { RegisterFormComponent } from "../../components"
 interface RegisterScreenProps extends RootNativeStackScreenProps<"Register"> {}
