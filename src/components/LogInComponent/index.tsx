@@ -8,9 +8,9 @@ import { authState } from "../../recoil/atom"
 interface LogInFormComponentProps {}
 export const LogInFormComponent = (props: LogInFormComponentProps) => {
   const [logIn, setLogIn] = useRecoilState(logInState)
-  const auth = useRecoilValue(authState)
   const resetLogIn = useResetRecoilState(logInState)
   const userAction = useUserAction()
+  const auth = useRecoilValue(authState)
   return (
     <View className="flex w-full justify-center gap-y-2 p-2">
       <TextInput
@@ -26,6 +26,11 @@ export const LogInFormComponent = (props: LogInFormComponentProps) => {
         keyboardType="visible-password"
         secureTextEntry={true}
       />
+      {auth.state === "hasError" && (
+        <View className="px-2 ">
+          <Text className="text-red-600">Email or password wrong</Text>
+        </View>
+      )}
 
       <TouchableOpacity
         onPress={() => {

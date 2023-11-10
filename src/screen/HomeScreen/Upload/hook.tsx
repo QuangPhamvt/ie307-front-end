@@ -35,7 +35,7 @@ export const useGetImageUpload = () => {
       result = await ImagePicker.launchCameraAsync(option)
     }
     if (!result.canceled) {
-      console.log(result.assets[0].uri)
+      // console.log(result.assets[0].uri)
       saveImage(result.assets[0].uri)
     }
   }, [])
@@ -47,7 +47,7 @@ export const useImageUpload = () => {
     try {
       setUpadeState("updating")
       const base64String = await FileSystem.readAsStringAsync(uri, { encoding: "base64", length: 9999999 })
-      console.log(base64String)
+      // console.log(base64String)
       const image = "data:image/jpeg;base64," + base64String
 
       if (uri && image) await postApi.uploadPost({ title, image })

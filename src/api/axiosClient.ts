@@ -1,5 +1,8 @@
+import chalk from "chalk"
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios"
 import * as SecureToken from "expo-secure-store"
+import { jwtDecode } from "jwt-decode"
+import { Buffer } from "buffer"
 
 // Boot Instance
 const axiosClient = axios.create({
@@ -13,11 +16,28 @@ const axiosClient = axios.create({
 // Interceptor Request
 const onRequest = async (config: any) => {
   try {
-    console.log(config.headers)
+    console.log(chalk.green.bgGreen.bold("Axios Request"))
+    console.log(chalk.green(config.headers))
     const accessToken = await SecureToken.getItemAsync("ie307_access_token")
-    if (accessToken) config.headers["Authorization"] = `Bearer ${accessToken}`
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`
+      const parts = accessToken
+        .split(".")
+        .map((part) => Buffer.from(part.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString())
+      const { exp } = JSON.parse(parts[1])
+      if (exp && exp < (Date.now() + 1) / 1000) {
+        const refreshToken = await SecureToken.getItemAsync("ie307_refresh_token")
+        const response = await axios.post(`http://ie307.customafk.com/user`, { refresh: refreshToken })
+        const { data } = response
+        await SecureToken.setItemAsync("ie307_access_token", data.accessToken)
+        await SecureToken.setItemAsync("ie307_refresh_token", data.refreshToken)
+        config.headers["Authorization"] = `Bearer ${data.accessToken}`
+      }
+    }
     return config
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
   console.log(error.request?.headers)
@@ -30,9 +50,9 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
   return response
 }
 const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
-  console.log(error.response?.headers)
-  console.log(error.response?.status)
-  console.log(error.response?.data)
+  // console.log(error.response?.headers)
+  // console.log(error.response?.status)
+  // console.log(error.response?.data)
   return Promise.reject(error.response)
 }
 const setupInterceptors = (axiosInstance: AxiosInstance) => {

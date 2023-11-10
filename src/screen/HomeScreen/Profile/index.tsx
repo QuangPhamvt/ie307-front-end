@@ -1,24 +1,30 @@
 import React from "react"
-import { HomeTabScreenProps, RootNativeStackScreenProps } from "../type"
-import { Image, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { useUserAction } from "../../hooks"
-import { useNavigation } from "@react-navigation/native"
+import { HomeTabScreenProps, RootNativeStackScreenProps } from "../../type"
+import { Image, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { useUserAction } from "../../../hooks"
+import { useRecoilValue } from "recoil"
+import { profileSelect } from "./store/atom"
 
 interface ProfileScreenProps extends HomeTabScreenProps<"Profile"> {}
 interface HeaderProfileComponentProps extends HomeTabScreenProps<"Profile"> {}
 export const HeaderProfileComponent = () => {
   const userAction = useUserAction()
+  const profile = useRecoilValue(profileSelect)
   return (
     <View className="flex w-full items-center justify-center gap-y-4 pt-8">
       <View className="flex items-center justify-center">
-        <Image
-          className="h-32 w-32 rounded-full"
-          source={{
-            uri: "https://images8.alphacoders.com/125/1251911.jpg",
-          }}
-        />
+        <View className="h-32 w-32 rounded-full bg-gray-400">
+          <ImageBackground borderRadius={9999} resizeMode="cover" source={require("../../../../assets/avatar.png")}>
+            <Image
+              className="h-full w-full"
+              source={{
+                uri: profile.avatar || "",
+              }}
+            />
+          </ImageBackground>
+        </View>
         <View className="mt-6 flex items-center justify-center">
-          <Text className="text-3xl font-bold">Jane</Text>
+          <Text className="text-3xl font-bold">{profile.username}</Text>
           <Text className="mt-2">SAN FRANCISCO, CA</Text>
         </View>
       </View>

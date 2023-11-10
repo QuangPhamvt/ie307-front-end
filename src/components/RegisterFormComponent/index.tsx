@@ -3,10 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "reac
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil"
 import { RegisterFormState } from "./atom"
 import { useUserAction } from "../../hooks"
+import { authState } from "../../recoil/atom"
 
 interface RegisterFormComponentProps {}
 export const RegisterFormComponent = (props: RegisterFormComponentProps) => {
   const [step, setStep] = React.useState<number>(1)
+  const auth = useRecoilValue(authState)
   const userAction = useUserAction()
   const [registerForm, setRegisterForm] = useRecoilState(RegisterFormState)
   const resetRegister = useResetRecoilState(RegisterFormState)
@@ -30,6 +32,11 @@ export const RegisterFormComponent = (props: RegisterFormComponentProps) => {
             className="border-2 border-black p-4"
             placeholder="password"
           />
+          {auth.state === "hasError" && (
+            <View className="px-2">
+              <Text className="text-red-400">{auth.data.message}</Text>
+            </View>
+          )}
           <TouchableOpacity onPress={handleNextStep} className="rounded-lg bg-black p-4">
             <Text className="rounded-md text-center text-xl font-bold text-white">Next</Text>
           </TouchableOpacity>
@@ -42,6 +49,11 @@ export const RegisterFormComponent = (props: RegisterFormComponentProps) => {
             className="border-2 border-black p-4"
             placeholder="username"
           />
+          {auth.state === "hasError" && (
+            <View className="px-2">
+              <Text className="text-red-400">{auth.data.message}</Text>
+            </View>
+          )}
           <View className="flex w-full flex-row items-center justify-around">
             <TouchableOpacity onPress={handlePreStep} className="w-[48%] rounded-lg border-2 border-black bg-white p-4">
               <Text className="rounded-md text-center text-xl font-bold text-black">Previous</Text>
