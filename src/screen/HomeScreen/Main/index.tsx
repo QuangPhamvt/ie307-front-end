@@ -3,8 +3,6 @@ import { ScrollView, View, Text, SafeAreaView } from "react-native"
 import { BrowseComponent, NewPostListComponent } from "../../../components"
 import { HomeTabScreenProps } from "../../type"
 import { usePostList } from "./store/customHook"
-import { useRecoilValue } from "recoil"
-import { postListState } from "./store"
 
 interface MainScreenProps extends HomeTabScreenProps<"Main"> {}
 interface HeaderMainComponentProps extends HomeTabScreenProps<"Main"> {}
@@ -12,7 +10,7 @@ const HeaderMainComponent: React.FC<Partial<HeaderMainComponentProps>> = (props)
   const {} = props
   return (
     <View>
-      <View className="m-4 flex">
+      <View className="flex m-4">
         <Text className="text-xs font-bold">WHAT'S NEW TODAY</Text>
       </View>
       <ScrollView className="" alwaysBounceHorizontal>

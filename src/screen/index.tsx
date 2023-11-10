@@ -8,6 +8,8 @@ import HomeScreen from "./HomeScreen"
 import StoryScreen from "./StoryScreen"
 import { RootNativeStackParamList } from "./type"
 import { authState } from "../recoil/atom"
+import { useWebSocket } from "../websocket"
+import { Text } from "react-native"
 
 export * from "./LogInScreen"
 export * from "./DashboardScreen"
@@ -17,6 +19,8 @@ export * from "./HomeScreen"
 const Stack = createNativeStackNavigator<RootNativeStackParamList>()
 const Screen: React.FC = () => {
   const auth = useRecoilValue(authState)
+  console.log("AuthData", auth)
+  useWebSocket(auth.data.id)
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
       {auth.state === "hasValue" ? (

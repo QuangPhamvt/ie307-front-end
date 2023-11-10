@@ -12,13 +12,22 @@ export const useUserAction = () => {
 
   const logIn = React.useCallback(async <T extends { email: string; password: string }>(payload: T) => {
     setIsLoading(true)
-    const response = await authApi.postSignIn(payload)
-    if (response.status === 200) {
-      await SecureStore.setItemAsync("ie307_access_token", response.data.accessToken)
-      await SecureStore.setItemAsync("ie307_refresh_token", response.data.refreshToken)
-      await getUserProfile()
+    try {
+      const response = await authApi.postSignIn(payload)
+      if (response.status === 200) {
+        await SecureStore.setItemAsync("ie307_access_token", response.data.accessToken)
+        await SecureStore.setItemAsync("ie307_refresh_token", response.data.refreshToken)
+        await getUserProfile()
+      }
+      setIsLoading(false)
+    } catch (error: any) {
+      if (error.status === 400) {
+        console.log("response")
+        console.log(error.data)
+        setAuth({ state: "hasError", data: { message: error.data.message } })
+      }
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }, [])
 
   const logOut = React.useCallback(async () => {
@@ -38,8 +47,8 @@ export const useUserAction = () => {
   }, [])
   const register = React.useCallback(
     async <T extends { email: string; password: string; username: string }>(payload: T) => {
+      setIsLoading(true)
       try {
-        setIsLoading(true)
         const response = await authApi.postSignUp(payload)
         if (response.status === 200) {
           await SecureStore.setItemAsync("ie307_access_token", response.data.accessToken)
@@ -47,8 +56,10 @@ export const useUserAction = () => {
           await getUserProfile()
         }
         setIsLoading(false)
-      } catch (error) {
+      } catch (error: any) {
         console.log(error)
+        setAuth({ state: "hasError", data: { message: error.data.message } })
+        setIsLoading(false)
       }
     },
     [],

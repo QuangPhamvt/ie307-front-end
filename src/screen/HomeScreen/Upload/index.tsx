@@ -26,7 +26,7 @@ const imagePicker = async (library: boolean) => {
       aspect: [3, 1],
       quality: 0.5,
     })
-    console.log(result)
+    // console.log(result)
     if (!result.canceled) return result.assets[0].uri
   }
 }

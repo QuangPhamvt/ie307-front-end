@@ -1,3 +1,4 @@
+import React from "react"
 import { HomeTabParamList, RootNativeStackScreenProps } from "../type"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { MainScreen } from "./Main"
@@ -6,15 +7,16 @@ import { AntDesign, Feather } from "@expo/vector-icons"
 import { SearchScreen } from "./Search"
 import { ChatScreen } from "./Chat"
 import { UploadScreen } from "./Upload"
-import { TouchableOpacity, View } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
-import { useImageUpload } from "./Upload/hook"
-import { useRoute } from "@react-navigation/native"
+import { useRecoilValue } from "recoil"
+import { authState } from "../../recoil/atom"
+import { useWebSocket } from "../../websocket"
 interface HomeScreenProps extends RootNativeStackScreenProps<"Home"> {}
 const Tab = createBottomTabNavigator<HomeTabParamList>()
 
 const HomeScreen = (props: HomeScreenProps) => {
-  const Route = useRoute()
+  const auth = useRecoilValue(authState)
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -44,7 +46,7 @@ const HomeScreen = (props: HomeScreenProps) => {
             return (
               <View className="w-full py-1">
                 <LinearGradient
-                  className="flex h-full w-full items-center justify-center rounded-full"
+                  className="flex items-center justify-center w-full h-full rounded-full"
                   colors={["#FF4B91", "#E95793", "#DA0C81"]}
                 >
                   <AntDesign name="plus" size={24} color={focused ? "#000" : "#ccc"} />
