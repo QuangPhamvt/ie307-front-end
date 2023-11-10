@@ -6,4 +6,8 @@ export const chatApi = {
     const url = PATH.CHAT_SUMMARIZED
     return axiosClient.get(url)
   },
+  postOriginChat: (payload: string): Promise<any> => {
+    const url = PATH.CHAT_ORIGIN
+    return axiosClient.post(url, { detail: payload })
+  },
 }

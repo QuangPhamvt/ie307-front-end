@@ -20,6 +20,13 @@ export type TChatState = {
         createAt: string
       }
     }[]
+    originChat?: {
+      id: string
+      sender_id: string
+      receiver_id: string
+      message: string
+      createAt: string
+    }[]
   }
 }
 export const authState = atom<TAuthState>({
@@ -39,6 +46,7 @@ export const chatState = atom<TChatState>({
     state: "idle",
     data: {
       summarized: undefined,
+      originChat: undefined,
     },
   },
 })

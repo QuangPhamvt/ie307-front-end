@@ -3,6 +3,8 @@
   "compilerOptions": {
     "module": "ES2022",
     "strict": true,
-    "paths": {}
+    "paths": {
+      "~/src/*": ["./src/*"]
+    }
   }
 }
