@@ -1,4 +1,5 @@
 import { atom } from "recoil"
+import { mockData } from "../screen/MessageScreen/mockData"
 
 export type TAuthState = {
   state: "hasValue" | "idle" | "loading" | "hasError"
@@ -40,8 +41,8 @@ export const authState = atom<TAuthState>({
     },
   },
 })
-export const chatState = atom<TChatState>({
-  key: "chatState",
+export const chatAtom = atom<TChatState>({
+  key: "chatAtom",
   default: {
     state: "idle",
     data: {

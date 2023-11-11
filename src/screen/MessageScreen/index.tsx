@@ -1,8 +1,10 @@
-import { Ionicons } from "@expo/vector-icons"
 import React from "react"
-import { View, Text, SafeAreaView, TextInput } from "react-native"
+import { View, SafeAreaView } from "react-native"
 import { RootNativeStackScreenProps } from "~/src/screen/type"
-const data = (message: Array<any>) => {
+import { MessageListComponent, MessageInputComponent } from "~/src/screen/MessageScreen/components"
+export const useConvertData = (
+  message: Array<{ id: string; sender_id: string; receiver_id: string; message: string; createAt: string }>,
+) => {
   let payload = [
     {
       sender_id: message[0].sender_id,
@@ -14,12 +16,12 @@ const data = (message: Array<any>) => {
       ],
     },
   ]
-  for (let i = 1; i < message.length; i++) {
+  for (let i = 1; i < message.length - 1; i++) {
     if (message[i - 1].sender_id === message[i].sender_id) {
       payload[payload.length - 1] = {
         ...payload[payload.length - 1],
         message: [
-          ...payload[i].message,
+          ...payload[payload.length - 1].message,
           {
             message: message[i].message,
             createAt: message[i].createAt,
@@ -28,18 +30,15 @@ const data = (message: Array<any>) => {
       }
     }
     if (message[i - 1].sender_id !== message[i].sender_id) {
-      payload = [
-        ...payload,
-        {
-          sender_id: message[i].sender_id,
-          message: [
-            {
-              message: message[i].message,
-              createAt: message[i].createAt,
-            },
-          ],
-        },
-      ]
+      payload.push({
+        sender_id: message[i].sender_id,
+        message: [
+          {
+            message: message[i].message,
+            createAt: message[i].createAt,
+          },
+        ],
+      })
     }
   }
   return payload
@@ -47,22 +46,13 @@ const data = (message: Array<any>) => {
 
 interface MessageScreenProps extends RootNativeStackScreenProps<"Message"> {}
 const MessageScreen: React.FC<MessageScreenProps> = (props) => {
-  const {} = props
   return (
     <SafeAreaView className="h-full bg-gray-200">
       <View className="h-[90%] px-2">
-        <View className="flex flex-row space-x-2">
-          <View className="h-12 w-12 bg-red-400" />
-          <View className="flex">
-            <Text>Message screen</Text>
-          </View>
-        </View>
+        <MessageListComponent />
       </View>
       <View className="flex h-[10%] items-center justify-center bg-gray-700 px-4">
-        <View className="flex w-full flex-row items-center justify-center rounded-lg border-2 border-gray-900 p-2">
-          <TextInput className="w-[95%]" />
-          <Ionicons name="md-send-sharp" size={24} />
-        </View>
+        <MessageInputComponent />
       </View>
     </SafeAreaView>
   )
