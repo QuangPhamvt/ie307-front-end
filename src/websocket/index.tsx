@@ -1,24 +1,21 @@
 import React from "react"
-import { DefaultValue, SetterOrUpdater, atom, selector, useRecoilState, useRecoilValue } from "recoil"
+import { SetterOrUpdater, atom, useRecoilState, useSetRecoilState } from "recoil"
+import { TChatState, chatAtom } from "../recoil/atom"
 
-// export const ws = (id: string) => {
-//   return new WebSocket(`ws://ws.ie307.customafk.com/websocket/${id}`)
-// }
-// export const useOpenWs = (id: string) => {
-//   ws(id).onopen = () => {
-//     ws(id).send("Connection")
-//   }
-// }
 type TWsWebsocket = {
   state: "idle" | "hasValue" | "Loading" | "hasError"
   data: {
+    ws?: any
     notification?: {
       username?: string
       notificationId: string
       userId?: string
       isMessage?: string
     }
-    message?: string
+    chat?: {
+      sender_id: string
+      message: string
+    }
   }
 }
 const wsAtom = atom<TWsWebsocket>({
@@ -26,28 +23,26 @@ const wsAtom = atom<TWsWebsocket>({
   default: {
     state: "idle",
     data: {
+      ws: undefined,
       notification: undefined,
-      message: undefined,
+      chat: undefined,
     },
   },
 })
-// const wsSelector = selector({
-//   key: "WebSocketSelector",
-//   get: ({ get }) => {
-//     const { data, state } = get(wsState)
-//     return { data, state }
-//   },
-//   set: ({ set }, newValue) => set(wsState, newValue instanceof DefaultValue ? newValue : newValue),
-// })
 export const useWebSocket = (id?: string) => {
   const [wsState, setWsState] = useRecoilState(wsAtom)
+  const setChatAtom = useSetRecoilState(chatAtom)
   React.useEffect(() => {
     if (!id) return
-    if (id) initialWebSocketConnect(id, wsState, setWsState)
+    if (id) initialWebSocketConnect(id, setWsState, setChatAtom)
   }, [id])
   console.log(wsState)
 }
-const initialWebSocketConnect = (id: string, wsState: TWsWebsocket, setWsState: SetterOrUpdater<TWsWebsocket>) => {
+const initialWebSocketConnect = (
+  id: string,
+  setWsState: SetterOrUpdater<TWsWebsocket>,
+  setChatAtom: SetterOrUpdater<TChatState>,
+) => {
   const ws = new WebSocket(`ws://ws.ie307.customafk.com/websocket/${id}`)
   ws.onopen = () => {}
   console.log("Websocket have a message: ", id)
@@ -56,14 +51,31 @@ const initialWebSocketConnect = (id: string, wsState: TWsWebsocket, setWsState: 
     if (data.notification) {
       console.log("notification")
       console.log(data.notification)
-
       setWsState({ state: "hasValue", data: { notification: data.notification } })
     }
-    if (data.message) {
+    if (data.chat) {
       console.log("message")
-      console.log(data.message)
-
-      setWsState({ state: "hasValue", data: { message: data.message } })
+      console.log(data.chat)
+      setChatAtom((preState) => ({
+        ...preState,
+        data: {
+          ...preState.data,
+          summarized: preState.data.summarized?.map((item) => {
+            if (item.receiverId === data.chat.sender_id) {
+              return {
+                ...item,
+                message: {
+                  message: data.chat.message,
+                  createAt: Date.now().toString(),
+                },
+              }
+            }
+            return item
+          }),
+        },
+      }))
+      setWsState({ state: "hasValue", data: { chat: data.chat } })
     }
   }
+  setWsState((preState) => ({ ...preState, data: { ...preState.data, ws } }))
 }

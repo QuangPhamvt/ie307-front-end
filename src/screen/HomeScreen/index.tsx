@@ -20,6 +20,7 @@ const HomeScreen = (props: HomeScreenProps) => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        header: () => <></>,
         tabBarIcon: ({ focused }) => {
           if (route.name === "Main")
             return (
