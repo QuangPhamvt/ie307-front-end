@@ -10,7 +10,7 @@ const MessageScreen: React.FC<MessageScreenProps> = (props) => {
       <View className="h-[90%] px-2">
         <MessageListComponent />
       </View>
-      <View className="flex h-[10%] items-center justify-center bg-gray-700 px-4">
+      <View className="flex h-[10%] items-center justify-center px-4">
         <MessageInputComponent />
       </View>
     </SafeAreaView>

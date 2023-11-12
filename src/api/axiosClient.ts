@@ -1,7 +1,6 @@
 import chalk from "chalk"
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios"
 import * as SecureToken from "expo-secure-store"
-import { jwtDecode } from "jwt-decode"
 import { Buffer } from "buffer"
 
 // Boot Instance
