@@ -1,9 +1,9 @@
 import React from "react"
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "react-native"
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil"
-import { RegisterFormState } from "./atom"
-import { useUserAction } from "../../hooks"
-import { authState } from "../../recoil/atom"
+import { RegisterFormState } from "~/src/screen/RegisterScreen/store"
+import { useUserAction } from "~/src/hooks"
+import { authState } from "~/src/recoil/atom"
 
 interface RegisterFormComponentProps {}
 export const RegisterFormComponent = (props: RegisterFormComponentProps) => {

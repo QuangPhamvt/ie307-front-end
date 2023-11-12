@@ -2,8 +2,8 @@ import React from "react"
 import { View, TextInput, TouchableOpacity, Text, Pressable, ActivityIndicator } from "react-native"
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil"
 import { logInState } from "./atom"
-import { useUserAction } from "../../hooks"
-import { authState } from "../../recoil/atom"
+import { useUserAction } from "~/src/hooks"
+import { authState } from "~/src/recoil/atom"
 
 interface LogInFormComponentProps {}
 export const LogInFormComponent = (props: LogInFormComponentProps) => {

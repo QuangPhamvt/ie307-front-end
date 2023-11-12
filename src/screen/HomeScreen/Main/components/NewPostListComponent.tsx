@@ -1,6 +1,6 @@
 import { View, FlatList } from "react-native"
 import { NewPostItemComponent } from "./NewPostItemComponent"
-import { HomeTabScreenProps } from "../screen/type"
+import { HomeTabScreenProps } from "~/src/screen/type"
 
 type DATA = {
   uri: string

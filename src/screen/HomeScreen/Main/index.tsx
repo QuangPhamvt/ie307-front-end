@@ -1,24 +1,11 @@
 import React from "react"
 import { ScrollView, View, Text, SafeAreaView } from "react-native"
-import { BrowseComponent, NewPostListComponent } from "../../../components"
+import { BrowseComponent } from "./components"
 import { HomeTabScreenProps } from "../../type"
 import { usePostList } from "./store/customHook"
+import { HeaderMainComponent } from "./components"
 
 interface MainScreenProps extends HomeTabScreenProps<"Main"> {}
-interface HeaderMainComponentProps extends HomeTabScreenProps<"Main"> {}
-const HeaderMainComponent: React.FC<Partial<HeaderMainComponentProps>> = (props) => {
-  const {} = props
-  return (
-    <View>
-      <View className="flex m-4">
-        <Text className="text-xs font-bold">WHAT'S NEW TODAY</Text>
-      </View>
-      <ScrollView className="" alwaysBounceHorizontal>
-        <NewPostListComponent />
-      </ScrollView>
-    </View>
-  )
-}
 export const MainScreen: React.FC<MainScreenProps> = (props) => {
   const {} = props
   const { handleGetPostList } = usePostList()

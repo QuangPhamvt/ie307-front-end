@@ -8,7 +8,7 @@ import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootNativeStackParamList } from "~/src/screen/type"
 
 export const useConvertData = (
-  message: Array<{ id: string; sender_id: string; receiver_id: string; message: string; createAt: string }>,
+  message: Array<{ sender_id: string; receiver_id: string; message: string; createAt: string }>,
 ) => {
   let payload = [
     {
@@ -50,18 +50,19 @@ export const useConvertData = (
 }
 export const MessageListComponent: React.FC = () => {
   const router = useRoute<RouteProp<RootNativeStackParamList, "Message">>()
+  const [data, setData] = React.useState<any>()
   const getChatAtomSelect = useRecoilValue(chatAtom)
   const { useGetOriginChat } = useChatAction()
-  const data = React.useMemo(() => {
-    if (getChatAtomSelect.data.originChat) return useConvertData(getChatAtomSelect.data.originChat)
-  }, [getChatAtomSelect])
   React.useEffect(() => {
     useGetOriginChat(router.params.userId || "")
   }, [])
+  React.useEffect(() => {
+    if (getChatAtomSelect.data.originChat) setData(useConvertData(getChatAtomSelect.data.originChat))
+  }, [getChatAtomSelect])
   return (
     <View>
       {data &&
-        data.map((item, index) => (
+        data.map((item: any, index: any) => (
           <MessageItemComponent
             key={index}
             messages={item.message}

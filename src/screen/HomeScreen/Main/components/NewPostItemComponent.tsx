@@ -1,6 +1,6 @@
 import React from "react"
-import { View, Image, Text, TouchableOpacity, Touchable } from "react-native"
-import { HomeTabScreenProps } from "../screen/type"
+import { View, Image, Text, TouchableOpacity } from "react-native"
+import { HomeTabScreenProps } from "~/src/screen/type"
 import { useNavigation } from "@react-navigation/native"
 
 type NewPostItemComponentProps = {
