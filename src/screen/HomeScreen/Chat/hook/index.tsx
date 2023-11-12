@@ -9,7 +9,7 @@ export const useChatAction = () => {
     try {
       setChat({ ...chat, state: "loading" })
       const response = await chatApi.getSummarized()
-      console.log(response.data)
+      console.log("Get summarized chat")
       setChat({ state: "hasValue", data: { summarized: response.data } })
     } catch (error: any) {
       setChat({ ...chat, state: "hasError" })
@@ -21,12 +21,19 @@ export const useChatAction = () => {
       setChat({ ...chat, state: "loading" })
       const response = await chatApi.postOriginChat(receiver_id)
 
-      console.log(response.data)
+      console.log("Get originChat chat")
       setChat((preState) => ({
         state: "hasValue",
         data: {
           summarized: preState.data.summarized,
-          originChat: response.data,
+          originChat: response.data.map((item: any) => {
+            return {
+              sender_id: item.sender_id,
+              receiver_id: item.receiver_id,
+              message: item.message,
+              createAt: item.createAt,
+            }
+          }),
         },
       }))
     } catch (error: any) {

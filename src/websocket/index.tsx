@@ -36,7 +36,7 @@ export const useWebSocket = (id?: string) => {
     if (!id) return
     if (id) initialWebSocketConnect(id, setWsState, setChatAtom)
   }, [id])
-  console.log(wsState)
+  console.log("WsAtom have: ", wsState.state)
 }
 const initialWebSocketConnect = (
   id: string,
@@ -49,31 +49,62 @@ const initialWebSocketConnect = (
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data)
     if (data.notification) {
-      console.log("notification")
-      console.log(data.notification)
+      console.log("message notification")
       setWsState({ state: "hasValue", data: { notification: data.notification } })
     }
     if (data.chat) {
-      console.log("message")
-      console.log(data.chat)
-      setChatAtom((preState) => ({
-        ...preState,
-        data: {
-          ...preState.data,
-          summarized: preState.data.summarized?.map((item) => {
-            if (item.receiverId === data.chat.sender_id) {
-              return {
-                ...item,
-                message: {
+      console.log("message chat")
+      setChatAtom((preState): TChatState => {
+        if (
+          (preState.data.originChat && preState.data.originChat[0].sender_id === data.chat.sender_id) ||
+          (preState.data.originChat && preState.data.originChat[0].receiver_id === data.chat.sender_id)
+        )
+          return {
+            state: preState.state,
+            data: {
+              summarized: preState.data.summarized?.map((item) => {
+                if (item.receiverId === data.chat.sender_id) {
+                  return {
+                    ...item,
+                    message: {
+                      message: data.chat.message,
+                      createAt: Date.now().toString(),
+                    },
+                  }
+                }
+                return item
+              }),
+              originChat: [
+                {
+                  sender_id: data.chat.sender_id,
+                  receiver_id: id,
                   message: data.chat.message,
                   createAt: Date.now().toString(),
                 },
+                ...preState.data.originChat,
+              ],
+            },
+          }
+
+        return {
+          state: preState.state,
+          data: {
+            summarized: preState.data.summarized?.map((item) => {
+              if (item.receiverId === data.chat.sender_id) {
+                return {
+                  ...item,
+                  message: {
+                    message: data.chat.message,
+                    createAt: Date.now().toString(),
+                  },
+                }
               }
-            }
-            return item
-          }),
-        },
-      }))
+              return item
+            }),
+            originChat: preState.data.originChat,
+          },
+        }
+      })
       setWsState({ state: "hasValue", data: { chat: data.chat } })
     }
   }

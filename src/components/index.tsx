@@ -1,5 +1,5 @@
 export * from "./NewPostItemComponent"
 export * from "./NewPostListComponent"
 export * from "./BrowseComponent"
-export * from "./LogInComponent"
+export * from "../screen/LogInScreen/components"
 export * from "./RegisterFormComponent"

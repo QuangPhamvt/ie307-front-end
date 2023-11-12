@@ -1,10 +1,10 @@
-import React, { ReactElement } from "react"
+import React from "react"
+import { View, Text, Image, TouchableOpacity, ActivityIndicator } from "react-native"
+import { useRecoilValue } from "recoil"
 import MasonryList from "@react-native-seoul/masonry-list"
-import { View, Text, Image, TouchableOpacity, ActivityIndicator, Touchable } from "react-native"
-import { usePostList } from "../screen/HomeScreen/Main/store/customHook"
-import { useRecoilValue, useResetRecoilState } from "recoil"
-import { getDataPostList, getStatePostList, postListState } from "../screen/HomeScreen/Main/store"
 import { AntDesign } from "@expo/vector-icons"
+import { usePostList } from "~/src/screen/HomeScreen/Main/store/customHook"
+import { getDataPostList, getStatePostList } from "~/src/screen/HomeScreen/Main/store"
 interface BrowseImageItemComponentProps {
   item: { image: string; heightImage: number }
 }
