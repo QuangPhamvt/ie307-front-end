@@ -1,28 +1,20 @@
 import React from "react"
-import { HomeTabScreenProps, RootNativeStackScreenProps } from "../../type"
-import { Image, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { HomeTabScreenProps } from "../../type"
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { useUserAction } from "../../../hooks"
 import { useRecoilValue } from "recoil"
 import { profileSelect } from "./store/atom"
+import { ProfileHeaderComponent, UploadAvatarModalComponent } from "./components"
 
 interface ProfileScreenProps extends HomeTabScreenProps<"Profile"> {}
-interface HeaderProfileComponentProps extends HomeTabScreenProps<"Profile"> {}
 export const HeaderProfileComponent = () => {
   const userAction = useUserAction()
   const profile = useRecoilValue(profileSelect)
   return (
     <View className="flex w-full items-center justify-center gap-y-4 pt-8">
+      <UploadAvatarModalComponent />
       <View className="flex items-center justify-center">
-        <View className="h-32 w-32 rounded-full bg-gray-400">
-          <ImageBackground borderRadius={9999} resizeMode="cover" source={require("../../../../assets/avatar.png")}>
-            <Image
-              className="h-full w-full"
-              source={{
-                uri: profile.avatar || "",
-              }}
-            />
-          </ImageBackground>
-        </View>
+        <ProfileHeaderComponent />
         <View className="mt-6 flex items-center justify-center">
           <Text className="text-3xl font-bold">{profile.username}</Text>
           <Text className="mt-2">SAN FRANCISCO, CA</Text>
@@ -49,7 +41,7 @@ export const HeaderProfileComponent = () => {
 }
 export const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
   return (
-    <SafeAreaView className="bg-black">
+    <SafeAreaView className="bg-white">
       <ScrollView className="h-full w-full bg-white p-4">
         <HeaderProfileComponent />
       </ScrollView>

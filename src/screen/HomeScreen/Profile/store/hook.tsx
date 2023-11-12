@@ -1,7 +1,10 @@
 import React from "react"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
-import { postApi } from "~/src/api"
+import { authApi, postApi } from "~/src/api"
+import { useSetRecoilState } from "recoil"
+import { uploadAvatarAtom, uploadAvatarModalAtom } from "./atom"
+import { authState } from "~/src/recoil/atom"
 
 const imageDirectory = FileSystem.documentDirectory + "IE307/"
 const ensureDirectoryExits = async () => {
@@ -10,16 +13,16 @@ const ensureDirectoryExits = async () => {
     await FileSystem.makeDirectoryAsync(imageDirectory, { intermediates: true })
   }
 }
-export const useGetImageUpload = () => {
-  const [image, setImage] = React.useState<string>("")
-  const saveImage = React.useCallback(async (uri: string) => {
+export const useGetAvatarUpload = () => {
+  const [avatar, setAvatar] = React.useState<string>("")
+  const saveAvatar = React.useCallback(async (uri: string) => {
     await ensureDirectoryExits()
     const fileName = new Date().getTime() + ".jpg"
     const destination = imageDirectory + fileName
     await FileSystem.copyAsync({ from: uri, to: destination })
-    setImage(destination)
+    setAvatar(destination)
   }, [])
-  const selectImage = React.useCallback(async (useLibrary: boolean) => {
+  const selectAvatar = React.useCallback(async (useLibrary: boolean) => {
     let result
     const option: ImagePicker.ImagePickerOptions = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -34,24 +37,29 @@ export const useGetImageUpload = () => {
       result = await ImagePicker.launchCameraAsync(option)
     }
     if (!result.canceled) {
-      saveImage(result.assets[0].uri)
+      saveAvatar(result.assets[0].uri)
     }
   }, [])
-  return { image, selectImage }
+  return { avatar, selectAvatar }
 }
-export const useImageUpload = () => {
-  const [updateState, setUpadeState] = React.useState<"idle" | "updating" | "success">("idle")
-  const handleUpload = React.useCallback(async (title: string, uri: string) => {
+export const useAvatarUpload = () => {
+  const setUploadAvatar = useSetRecoilState(uploadAvatarAtom)
+  const setAuth = useSetRecoilState(authState)
+  const setUploadAvatarModal = useSetRecoilState(uploadAvatarModalAtom)
+  const handleUpload = React.useCallback(async (uri: string) => {
     try {
-      setUpadeState("updating")
+      setUploadAvatar({ state: "loading" })
       const base64String = await FileSystem.readAsStringAsync(uri, { encoding: "base64", length: 9999999 })
       const image = "data:image/jpeg;base64," + base64String
 
-      if (uri && image) await postApi.uploadPost({ title, image })
-      setUpadeState("success")
+      if (uri && image) await authApi.postUploadAvatar(image)
+      setAuth((preState) => ({ ...preState, data: { ...preState.data, avatar: image } }))
+      setUploadAvatarModal({ state: "close" })
+      setUploadAvatar({ state: "success" })
     } catch (error) {
       console.log(error)
+      setUploadAvatar({ state: "hasError" })
     }
   }, [])
-  return { updateState, setUpadeState, handleUpload }
+  return { handleUpload }
 }
