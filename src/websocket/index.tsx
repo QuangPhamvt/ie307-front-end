@@ -5,7 +5,6 @@ import { TChatState, chatAtom } from "../recoil/atom"
 type TWsWebsocket = {
   state: "idle" | "hasValue" | "Loading" | "hasError"
   data: {
-    ws?: any
     notification?: {
       username?: string
       notificationId: string
@@ -18,12 +17,11 @@ type TWsWebsocket = {
     }
   }
 }
-const wsAtom = atom<TWsWebsocket>({
+export const wsAtom = atom<TWsWebsocket>({
   key: "WebSocketState",
   default: {
     state: "idle",
     data: {
-      ws: undefined,
       notification: undefined,
       chat: undefined,
     },
@@ -34,23 +32,35 @@ export const useWebSocket = (id?: string) => {
   const setChatAtom = useSetRecoilState(chatAtom)
   React.useEffect(() => {
     if (!id) return
-    if (id) initialWebSocketConnect(id, setWsState, setChatAtom)
+    if (id) {
+      initialWebSocketConnect({ id, setWsState, setChatAtom })
+    }
   }, [id])
   console.log("WsAtom have: ", wsState.state)
 }
-const initialWebSocketConnect = (
-  id: string,
-  setWsState: SetterOrUpdater<TWsWebsocket>,
-  setChatAtom: SetterOrUpdater<TChatState>,
+const initialWebSocketConnect = <
+  T extends {
+    id: string
+    setWsState: SetterOrUpdater<TWsWebsocket>
+    setChatAtom: SetterOrUpdater<TChatState>
+  },
+>(
+  props: T,
 ) => {
+  const { id, setWsState, setChatAtom } = props
   const ws = new WebSocket(`ws://ws.ie307.customafk.com/websocket/${id}`)
   ws.onopen = () => {}
   console.log("Websocket have a message: ", id)
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data)
     if (data.notification) {
-      console.log("message notification")
-      setWsState({ state: "hasValue", data: { notification: data.notification } })
+      setWsState((preState) => ({
+        state: "hasValue",
+        data: {
+          chat: preState.data.chat,
+          notification: data.notification,
+        },
+      }))
     }
     if (data.chat) {
       console.log("message chat")
@@ -85,7 +95,6 @@ const initialWebSocketConnect = (
               ],
             },
           }
-
         return {
           state: preState.state,
           data: {
@@ -105,8 +114,12 @@ const initialWebSocketConnect = (
           },
         }
       })
-      setWsState({ state: "hasValue", data: { chat: data.chat } })
+      setWsState((preState) => ({
+        state: "hasValue",
+        data: { notification: preState.data.notification, chat: data.chat },
+      }))
     }
   }
   setWsState((preState) => ({ ...preState, data: { ...preState.data, ws } }))
+  return { ws }
 }

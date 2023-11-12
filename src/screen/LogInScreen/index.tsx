@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Keyboard } from "react-native"
 import { RootNativeStackScreenProps } from "../type"
 import React from "react"
-import { LogInFormComponent } from "../../components"
+import { LogInFormComponent } from "~/src/screen/LogInScreen/components"
 interface LogInScreenProps extends RootNativeStackScreenProps<"Login"> {}
 const LogInScreen = (props: LogInScreenProps) => {
   const { navigation } = props

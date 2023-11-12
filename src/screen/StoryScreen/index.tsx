@@ -1,5 +1,5 @@
 import React from "react"
-import { RootNativeStackScreenProps } from "./type"
+import { RootNativeStackScreenProps } from "../type"
 import { ImageBackground, Image, SafeAreaView, Text, View } from "react-native"
 import { AntDesign } from "@expo/vector-icons"
 

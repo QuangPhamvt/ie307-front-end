@@ -7,9 +7,9 @@ export const MessageItemComponent: React.FC<{
   return (
     <View className={`flex ${isUser ? "flex-row-reverse" : "flex-row"} items-end py-2 `}>
       <View className="mx-1 h-12 w-12 rounded-full bg-red-400" />
-      <View className="flex max-w-[60%] flex-wrap items-start space-y-[2px] pb-1">
+      <View className={`flex max-w-[60%] flex-col-reverse ${isUser ? "items-end" : "items-start"} space-y-[2px] pb-1`}>
         {messages.map((message) => (
-          <View key={message.createAt} className="flex rounded-2xl bg-blue-400 px-4 py-2">
+          <View key={message.createAt} className="mb-1 flex rounded-2xl bg-blue-400 px-4 py-2">
             <Text>{message.message}</Text>
           </View>
         ))}
