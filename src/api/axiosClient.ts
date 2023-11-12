@@ -1,5 +1,4 @@
-import chalk from "chalk"
-import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios"
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
 import * as SecureToken from "expo-secure-store"
 import { Buffer } from "buffer"
 
@@ -15,10 +14,9 @@ const axiosClient = axios.create({
 // Interceptor Request
 const onRequest = async (config: any) => {
   try {
-    console.log(chalk.green.bgGreen.bold("Axios Request"))
-    console.log(chalk.green(config.headers))
+    console.log("Axios Request")
     const accessToken = await SecureToken.getItemAsync("ie307_access_token")
-    if (accessToken) {
+    if (accessToken && config.url !== "user") {
       config.headers["Authorization"] = `Bearer ${accessToken}`
       const parts = accessToken
         .split(".")
@@ -26,7 +24,7 @@ const onRequest = async (config: any) => {
       const { exp } = JSON.parse(parts[1])
       if (exp && exp < (Date.now() + 1) / 1000) {
         const refreshToken = await SecureToken.getItemAsync("ie307_refresh_token")
-        const response = await axios.post(`http://ie307.customafk.com/user`, { refresh: refreshToken })
+        const response = await axios.post(`http://ie307.customafk.com/user`, { refresh: { refresh: refreshToken } })
         const { data } = response
         await SecureToken.setItemAsync("ie307_access_token", data.accessToken)
         await SecureToken.setItemAsync("ie307_refresh_token", data.refreshToken)
@@ -34,14 +32,14 @@ const onRequest = async (config: any) => {
       }
     }
     return config
-  } catch (error) {
-    console.log(error)
+  } catch (error: any) {
+    console.log(error.response.status)
   }
 }
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  console.log(error.request?.headers)
+  // console.log(error.request?.headers)
   console.log(error.request?.status)
-  console.log(error.request?.data)
+  // console.log(error.request?.data)
 
   return Promise.reject(error.request)
 }
@@ -50,7 +48,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 }
 const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
   // console.log(error.response?.headers)
-  // console.log(error.response?.status)
+  console.log(error.response?.status)
   // console.log(error.response?.data)
   return Promise.reject(error.response)
 }

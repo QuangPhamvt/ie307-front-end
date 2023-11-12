@@ -11,53 +11,10 @@ import {
   Keyboard,
 } from "react-native"
 import { HomeTabScreenProps } from "../../type"
-import * as ImagePicker from "expo-image-picker"
 import { useGetImageUpload, useImageUpload } from "./hook"
-import { useDoubleTap } from "../../../hooks"
-import { Ionicons, SimpleLineIcons } from "@expo/vector-icons"
+import { UploadImageComponent } from "./components"
 
 interface UploadScreenProps extends HomeTabScreenProps<"Upload"> {}
-
-const imagePicker = async (library: boolean) => {
-  if (library) {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [3, 1],
-      quality: 0.5,
-    })
-    // console.log(result)
-    if (!result.canceled) return result.assets[0].uri
-  }
-}
-const UploadImageComponent: React.FC<{
-  imageUri: string
-  onSetUploadImage: () => void
-  updateState: "idle" | "updating" | "success"
-  onSetUpdateState: (state: "idle" | "success" | "updating") => void
-}> = (props) => {
-  const { imageUri, onSetUploadImage, updateState, onSetUpdateState } = props
-  const { handleDoubleTap } = useDoubleTap(onSetUploadImage, 500)
-  return (
-    <>
-      <View className="mt-12 flex aspect-square h-1/2 items-center justify-center rounded-md border-2 border-gray-600 ">
-        <TouchableOpacity
-          className="flex h-full w-full items-center justify-center"
-          onPress={() => {
-            onSetUpdateState("idle")
-            handleDoubleTap()
-          }}
-        >
-          {imageUri && updateState === "idle" && (
-            <Image source={{ uri: imageUri }} className="h-full w-full rounded-md" />
-          )}
-          {imageUri && updateState === "success" && <Ionicons name="checkmark-sharp" size={42} />}
-          {!imageUri && <SimpleLineIcons name="cloud-upload" size={42} />}
-        </TouchableOpacity>
-      </View>
-    </>
-  )
-}
 export const UploadScreen: React.FC = () => {
   const { image, selectImage } = useGetImageUpload()
   const [title, setTitle] = React.useState<string>("")

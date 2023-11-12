@@ -5,19 +5,24 @@ import MasonryList from "@react-native-seoul/masonry-list"
 import { AntDesign } from "@expo/vector-icons"
 import { usePostList } from "~/src/screen/HomeScreen/Main/store/customHook"
 import { getDataPostList, getStatePostList } from "~/src/screen/HomeScreen/Main/store"
+import { useNavigation } from "@react-navigation/native"
 interface BrowseImageItemComponentProps {
-  item: { image: string; heightImage: number }
+  item: { id: string; image: string; heightImage: number }
 }
 interface BrowseImageListComponentProps {}
 interface BrowserComponentProps {}
 const BrowseImageItemComponent: React.FC<Partial<BrowseImageItemComponentProps>> = (props) => {
   const { item } = props
+  if (!item) return null
+  const navigation = useNavigation()
   return (
-    <Image
-      className="m-1 rounded-md border-[1px] object-contain"
-      height={item?.heightImage}
-      source={{ uri: item?.image || "" }}
-    />
+    <TouchableOpacity onPress={() => navigation.navigate("Story", { postId: item.id })}>
+      <Image
+        className="m-1 rounded-md border-[1px] object-contain"
+        height={item?.heightImage}
+        source={{ uri: item?.image || "" }}
+      />
+    </TouchableOpacity>
   )
 }
 const BrowseImageListComponent: React.FC<BrowseImageListComponentProps> = () => {

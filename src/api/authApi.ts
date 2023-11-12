@@ -18,4 +18,8 @@ export const authApi = {
     const url = PATH.USER
     return axiosClient.post(url, { refresh: data })
   },
+  postUploadAvatar: <T extends string>(payload: T): Promise<any> => {
+    const url = PATH.USER_UPLOAD
+    return axiosClient.post(url, { avatar: payload })
+  },
 }

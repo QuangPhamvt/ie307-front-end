@@ -1,6 +1,20 @@
-import { ScrollView, VirtualizedList, View, Text, SafeAreaView, TextInput, Image, FlatList } from "react-native"
-import { HomeTabScreenProps } from "../type"
+import {
+  ScrollView,
+  VirtualizedList,
+  View,
+  Text,
+  SafeAreaView,
+  TextInput,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native"
+import { HomeTabScreenProps } from "../../type"
 import React from "react"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { searchAtom, textSearchAtom } from "./store"
+import { useSearchPost } from "./store/hook"
+import { Feather } from "@expo/vector-icons"
 
 const mockData: { id: string; uri: string }[] = [
   {
@@ -72,31 +86,39 @@ interface PostItemSearchProps {
 const PostItemSearch: React.FC<PostItemSearchProps> = (props) => {
   const { uri } = props
   return (
-    <View className="m-2 mx-auto aspect-square w-[30%] border-[1px]">
-      <Image className="h-full w-full" source={{ uri }} />
+    <View className="m-1 w-[30%]">
+      <Image className="aspect-square w-full" source={{ uri }} />
     </View>
   )
 }
 const PostListSearch: React.FC<PostListSearchProps> = () => {
+  const search = useRecoilValue(searchAtom)
+  if (search.state !== "hasValue" || !search.data) return null
   return (
-    <FlatList
-      scrollEnabled={true}
-      alwaysBounceVertical
-      data={mockData}
-      numColumns={3}
-      renderItem={({ item }) => <PostItemSearch uri={item.uri} />}
-      keyExtractor={(item) => item.id}
-    />
+    <>
+      <View className="flex w-full flex-row flex-wrap justify-start">
+        {search.data.map((item) => {
+          return <PostItemSearch key={item.id} uri={item.image} />
+        })}
+      </View>
+    </>
   )
 }
 export const SearchScreen: React.FC<SearchScreenProps> = () => {
+  const [textSearch, setTextSearch] = useRecoilState(textSearchAtom)
+  const { submitSearch } = useSearchPost()
   return (
     <SafeAreaView className="flex w-full gap-y-2 bg-black">
-      <ScrollView showsVerticalScrollIndicator={false} className="bg-white px-4">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex bg-white px-4">
         <View className="py-4">
           <Text className="text-5xl font-light">Search</Text>
         </View>
-        <TextInput className="border-2 border-black p-4" placeholder="search" />
+        <View className="flex flex-row justify-between border-2 border-black p-4">
+          <TextInput onChangeText={(text) => setTextSearch(text)} value={textSearch} placeholder="search" />
+          <TouchableOpacity className="" onPress={submitSearch}>
+            <Feather name="search" size={24} />
+          </TouchableOpacity>
+        </View>
         <View className="my-2">
           <Text className="font-bold">ALL RESULTS</Text>
         </View>

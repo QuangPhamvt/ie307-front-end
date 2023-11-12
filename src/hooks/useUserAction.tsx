@@ -21,9 +21,9 @@ export const useUserAction = () => {
       }
       setIsLoading(false)
     } catch (error: any) {
+      console.log(error)
       if (error.status === 400) {
         console.log("response")
-        console.log(error.data)
         setAuth({ state: "hasError", data: { message: error.data.message } })
       }
       setIsLoading(false)

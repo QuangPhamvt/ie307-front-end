@@ -1,12 +1,12 @@
+import React from "react"
 import { View, ScrollView } from "react-native"
-import { MessageItemComponent } from "./MessageItemComponent"
 import { useRecoilValue } from "recoil"
 import { authState, chatAtom } from "~/src/recoil/atom"
-import React from "react"
 import { useChatAction } from "~/src/screen/HomeScreen/Chat/hook"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootNativeStackParamList } from "~/src/screen/type"
 import { useConvertData } from "../store"
+import { MessageItemComponent } from "./MessageItemComponent"
 
 export const MessageListComponent: React.FC = () => {
   const scrollViewRef = React.useRef<any>(null)

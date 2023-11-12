@@ -1,6 +1,6 @@
 import React from "react"
-import { HomeTabScreenProps } from "~/src/screen/type"
 import { SafeAreaView, View, Text } from "react-native"
+import { HomeTabScreenProps } from "~/src/screen/type"
 import { NotificationChat } from "./components"
 
 interface ChatScreenProps extends HomeTabScreenProps<"Chat"> {}
