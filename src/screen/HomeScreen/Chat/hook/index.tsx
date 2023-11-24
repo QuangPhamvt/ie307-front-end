@@ -20,20 +20,25 @@ export const useChatAction = () => {
     try {
       setChat({ ...chat, state: "loading" })
       const response = await chatApi.postOriginChat(receiver_id)
+      console.log(response.data)
 
       console.log("Get originChat chat")
       setChat((preState) => ({
         state: "hasValue",
         data: {
           summarized: preState.data.summarized,
-          originChat: response.data.map((item: any) => {
-            return {
-              sender_id: item.sender_id,
-              receiver_id: item.receiver_id,
-              message: item.message,
-              createAt: item.createAt,
-            }
-          }),
+          originChat:
+            response.data.length != 0
+              ? response.data.map((item: any) => {
+                  if (item?.sender_id)
+                    return {
+                      sender_id: item.sender_id,
+                      receiver_id: item.receiver_id,
+                      message: item.message,
+                      createAt: item.createAt,
+                    }
+                })
+              : undefined,
         },
       }))
     } catch (error: any) {

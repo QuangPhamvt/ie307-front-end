@@ -1,2 +1,2 @@
 export * from "./atom"
-export * from "./hook"
+export { default as ProfileAction } from "./hook"

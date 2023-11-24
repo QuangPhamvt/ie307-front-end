@@ -1,13 +1,21 @@
 import { Entypo } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native"
+import { useSetRecoilState } from "recoil"
+import { chatAtom } from "~/src/recoil/atom"
 
 export const MessageScreenHeader = () => {
   const navigator = useNavigation()
+  const setChatAtom = useSetRecoilState(chatAtom)
   return (
     <SafeAreaView className="z-[9999] bg-white">
       <View className="flex flex-row items-center justify-start space-x-4 p-4">
-        <TouchableOpacity onPress={() => navigator.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            setChatAtom((preState) => ({ ...preState, data: { ...preState.data, originChat: undefined } }))
+            navigator.goBack()
+          }}
+        >
           <Entypo name="chevron-left" size={24} />
         </TouchableOpacity>
         <View className="">

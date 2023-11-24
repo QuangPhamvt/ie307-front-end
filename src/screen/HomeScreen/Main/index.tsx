@@ -1,14 +1,11 @@
 import React from "react"
 import { ScrollView, View, Text, SafeAreaView } from "react-native"
 import { BrowseComponent } from "./components"
-import { HomeTabScreenProps } from "../../type"
-import { usePostList } from "./store/customHook"
+import PostAction from "./store/customHook"
 import { HeaderMainComponent } from "./components"
 
-interface MainScreenProps extends HomeTabScreenProps<"Main"> {}
-export const MainScreen: React.FC<MainScreenProps> = (props) => {
-  const {} = props
-  const { handleGetPostList } = usePostList()
+export const MainScreen: React.FC = () => {
+  const { handleGetPostList } = PostAction.useGetPostList()
   React.useEffect(() => {
     handleGetPostList()
   }, [])

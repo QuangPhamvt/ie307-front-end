@@ -14,9 +14,10 @@ const axiosClient = axios.create({
 // Interceptor Request
 const onRequest = async (config: any) => {
   try {
-    console.log("Axios Request")
+    console.log("Axios Request: ", config.url)
+
     const accessToken = await SecureToken.getItemAsync("ie307_access_token")
-    if (accessToken && config.url !== "user") {
+    if (accessToken && config.url !== "user/signIn" && config.url !== "user/signUp") {
       config.headers["Authorization"] = `Bearer ${accessToken}`
       const parts = accessToken
         .split(".")
@@ -48,8 +49,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 }
 const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
   // console.log(error.response?.headers)
-  console.log(error.response?.status)
-  // console.log(error.response?.data)
+  console.error(error.response?.status)
   return Promise.reject(error.response)
 }
 const setupInterceptors = (axiosInstance: AxiosInstance) => {

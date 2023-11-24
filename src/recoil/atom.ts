@@ -1,13 +1,13 @@
 import { atom } from "recoil"
-import { mockData } from "../screen/MessageScreen/mockData"
+import { ATOM_KEY, STATE } from "../utilities"
 
 export type TAuthState = {
-  state: "hasValue" | "idle" | "loading" | "hasError"
-  data: {
-    id?: string
-    username?: string
-    avatar?: string
-    message?: string
+  state: STATE
+  message: string | null
+  contents: {
+    id: string | null
+    username: string | null
+    avatar: string | null
   }
 }
 export type TChatState = {
@@ -30,13 +30,14 @@ export type TChatState = {
   }
 }
 export const authState = atom<TAuthState>({
-  key: "AuthState",
+  key: ATOM_KEY.AUTH_STATE_ATOM,
   default: {
     state: "idle",
-    data: {
-      id: undefined,
-      username: undefined,
-      avatar: undefined,
+    message: null,
+    contents: {
+      id: null,
+      username: null,
+      avatar: null,
     },
   },
 })

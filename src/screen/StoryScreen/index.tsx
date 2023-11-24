@@ -1,42 +1,54 @@
 import React, { useEffect } from "react"
 import { RootNativeStackParamList, RootNativeStackScreenProps } from "../type"
-import { ImageBackground, Image, SafeAreaView, Text, View } from "react-native"
+import { ImageBackground, Image, SafeAreaView, Text, View, TouchableOpacity } from "react-native"
 import { AntDesign } from "@expo/vector-icons"
 import { AvatarOriginPostComponent } from "./components"
-import { useRecoilValue } from "recoil"
-import { originPostAtom, useGetOriginPost } from "./store"
+import { useRecoilValue, useResetRecoilState } from "recoil"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import StoryAction from "./store/hook"
+import { originPostState } from "./store"
 
-interface StoryScreenProps extends RootNativeStackScreenProps<"Story"> {}
-const StoryScreen: React.FC<StoryScreenProps> = (props) => {
-  const originPost = useRecoilValue(originPostAtom)
-  const route = useRoute<RouteProp<RootNativeStackParamList, "Story">>()
-  const { getOriginPost } = useGetOriginPost(route.params.postId)
+const StoryScreen: React.FC = () => {
+  const {
+    params: { postId },
+  } = useRoute<RouteProp<RootNativeStackParamList, "Story">>()
+  const { state, contents } = useRecoilValue(originPostState)
+  const resetOriginPostState = useResetRecoilState(originPostState)
+  const { getOriginPost } = StoryAction.useGetOriginPost()
   const navigation = useNavigation()
   useEffect(() => {
-    getOriginPost()
-  }, [])
+    getOriginPost(postId)
+  }, [postId])
+
   return (
     <SafeAreaView className="bg-black">
-      {originPost.state === "hasValue" && !!originPost.data && (
+      {state === "hasValue" && !!contents.image && (
         <ImageBackground
           resizeMode="cover"
           className="opacity-70"
           source={{
-            uri: `${originPost.data.image}`,
+            uri: `${contents.image}`,
           }}
         >
           <View className="h-screen w-screen ">
-            <View className="flex flex-row items-center justify-between opacity-90">
-              <AvatarOriginPostComponent
-                title={originPost.data.title}
-                authorAvatar={originPost.data.authorAvatar}
-                authorUsername={originPost.data.authorUsername}
-              />
-              <View className="mr-4" onTouchStart={() => navigation?.navigate("Home", { screen: "Main" })}>
-                <AntDesign color={"#ccc"} name="close" size={32} />
+            <TouchableOpacity onPress={() => navigation.navigate("User", { userId: contents.author?.author_id || "" })}>
+              <View className="flex flex-row items-center justify-between opacity-90">
+                <AvatarOriginPostComponent
+                  title={contents.title || ""}
+                  authorAvatar={contents.author?.avatar || ""}
+                  authorUsername={contents.author?.username || ""}
+                />
+                <View
+                  className="mr-4"
+                  onTouchStart={() => {
+                    resetOriginPostState()
+                    navigation?.navigate("Home", { screen: "Main" })
+                  }}
+                >
+                  <AntDesign color={"#ccc"} name="close" size={32} />
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
       )}

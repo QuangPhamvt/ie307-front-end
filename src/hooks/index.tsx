@@ -1,6 +1,6 @@
 import React from "react"
 
-export * from "./useUserAction"
+export * from "./AuthAction"
 export * from "./useRenderCount"
 export const useDoubleTap = (callback: () => void, DELAY: number) => {
   const lastTap = React.useRef<number>(0)

@@ -9,6 +9,7 @@ export type RootNativeStackParamList = {
   Home: NavigatorScreenParams<HomeTabParamList>
   Message: { userId: string }
   Story: { postId: string }
+  User: { userId: string }
 }
 export type RootNativeStackScreenProps<T extends keyof RootNativeStackParamList> = NativeStackScreenProps<
   RootNativeStackParamList,

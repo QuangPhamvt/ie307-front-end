@@ -1,22 +1,39 @@
 import { useSetRecoilState } from "recoil"
 import { postApi } from "~/src/api"
-import { originPostAtom } from "./atom"
+import { originPostState } from "./atom"
 
-export const useGetOriginPost = (postId: string) => {
-  const setOriginPost = useSetRecoilState(originPostAtom)
-  const getOriginPost = async () => {
+const useGetOriginPost = () => {
+  const setOriginPostState = useSetRecoilState(originPostState)
+  const getOriginPost = async (postId: string) => {
     try {
-      setOriginPost((preState) => ({ ...preState, state: "loading" }))
-      const response = await postApi.originPost({ postId })
-      setOriginPost({
+      setOriginPostState((preState) => ({ ...preState, state: "isLoading" }))
+      const {
+        data: { data, message },
+      } = await postApi.originPost({ post_id: postId })
+      console.log(data.length)
+
+      const {
+        originPost: { post_id, title, image, author },
+      } = data[0]
+      setOriginPostState({
         state: "hasValue",
-        data: response.data.originPost,
+        message,
+        contents: {
+          post_id,
+          title,
+          image,
+          author,
+        },
       })
-      setOriginPost((preState) => ({ ...preState, state: "hasValue" }))
     } catch (error: any) {
-      console.log(error)
-      setOriginPost({ state: "hasError", data: undefined })
+      console.error(error)
+      setOriginPostState((preState) => ({ ...preState, state: "hasError", message: error.data.message }))
     }
   }
   return { getOriginPost }
 }
+
+const StoryAction = {
+  useGetOriginPost,
+}
+export default StoryAction
