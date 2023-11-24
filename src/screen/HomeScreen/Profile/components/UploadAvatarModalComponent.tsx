@@ -1,29 +1,28 @@
 import React from "react"
 import { Modal, View, Text, TouchableOpacity, Image, Alert, ActivityIndicator } from "react-native"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { uploadAvatarAtom, uploadAvatarModalAtom, useAvatarUpload, useGetAvatarUpload } from "../store"
 import { useDoubleTap } from "~/src/hooks"
+import { ProfileAction, uploadAvatarModalState, uploadAvatarState, uploadAvatarUriState } from "../store"
+import { authState } from "~/src/recoil/atom"
 
 export const UploadAvatarModalComponent = () => {
-  const [uploadAvatarModal, setUploadAvatarModal] = useRecoilState(uploadAvatarModalAtom)
-  const uploadAvatar = useRecoilValue(uploadAvatarAtom)
-  const { avatar, selectAvatar } = useGetAvatarUpload()
-  const alertSelect = React.useCallback(
-    () =>
-      Alert.alert("Upload Avatar", "Choose an upload method", [
-        {
-          text: "Library",
-          onPress: () => selectAvatar(true),
-        },
-        {
-          text: "Camera",
-          onPress: () => selectAvatar(false),
-        },
-      ]),
-    [],
-  )
+  const [uploadAvatarModal, setUploadAvatarModal] = useRecoilState(uploadAvatarModalState)
+  const avatar = useRecoilValue(uploadAvatarUriState)
+  const { state, message } = useRecoilValue(uploadAvatarState)
+  const { handleSelectAvatar } = ProfileAction.useGetAvatarUpload()
+  const alertSelect = () =>
+    Alert.alert("Upload Avatar", "Choose an upload method", [
+      {
+        text: "Library",
+        onPress: () => handleSelectAvatar(true),
+      },
+      {
+        text: "Camera",
+        onPress: () => handleSelectAvatar(false),
+      },
+    ])
   const { handleDoubleTap } = useDoubleTap(alertSelect, 500)
-  const { handleUpload } = useAvatarUpload()
+  const { handleUpload } = ProfileAction.useAvatarUpload()
 
   return (
     <Modal className="" transparent={true} visible={uploadAvatarModal.state === "open"} animationType="fade">
@@ -41,8 +40,8 @@ export const UploadAvatarModalComponent = () => {
               </TouchableOpacity>
             </View>
             <View className="flex w-5/12 items-center justify-center rounded-md border-2 border-black bg-black px-4 py-1">
-              <TouchableOpacity onPress={() => handleUpload(avatar)}>
-                {uploadAvatar.state === "loading" ? <ActivityIndicator /> : <Text className="text-white">Ok</Text>}
+              <TouchableOpacity onPress={() => handleUpload()}>
+                {state === "isLoading" ? <ActivityIndicator /> : <Text className="text-white">Ok</Text>}
               </TouchableOpacity>
             </View>
           </View>

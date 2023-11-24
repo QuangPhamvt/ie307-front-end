@@ -7,20 +7,24 @@ import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootNativeStackParamList } from "~/src/screen/type"
 import { useConvertData } from "../store"
 import { MessageItemComponent } from "./MessageItemComponent"
+import { useMessageWs } from "~/src/websocket/messageWS"
 
 export const MessageListComponent: React.FC = () => {
   const scrollViewRef = React.useRef<any>(null)
   const router = useRoute<RouteProp<RootNativeStackParamList, "Message">>()
   const auth = useRecoilValue(authState)
   const [data, setData] = React.useState<any>()
-  const getChatAtomSelect = useRecoilValue(chatAtom)
+  const {
+    data: { originChat },
+  } = useRecoilValue(chatAtom)
   const { useGetOriginChat } = useChatAction()
   React.useEffect(() => {
     useGetOriginChat(router.params.userId || "")
   }, [])
+  useMessageWs(auth.data.id || "")
   React.useEffect(() => {
-    if (getChatAtomSelect.data.originChat) setData(useConvertData(getChatAtomSelect.data.originChat))
-  }, [getChatAtomSelect.data.originChat])
+    if (originChat) setData(useConvertData(originChat))
+  }, [originChat])
   return (
     <ScrollView ref={scrollViewRef} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
       <View className="mb-2 flex flex-col-reverse">

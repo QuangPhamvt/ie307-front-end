@@ -1,27 +1,31 @@
 import { atom } from "recoil"
-export type TSearchAtom = {
-  state: "idle" | "loading" | "hasValue" | "hasError"
-  data?: {
-    id: string
+import { ATOM_KEY, STATE } from "~/src/utilities"
+export type TSearchResponseState = {
+  state: STATE
+  message: string | null
+  contents: {
+    post_id: string
+    image: string
+    slug: string
+    published: number
+    createAt: string
     author: {
+      author_id: string
       username: string
       avatar: string | null
     }
-    image: string
-    createAt: string
-    slug: string
-    published: number
   }[]
 }
-export const searchAtom = atom<TSearchAtom>({
+export const searchResponseState = atom<TSearchResponseState>({
   key: "searchAtom",
   default: {
     state: "idle",
-    data: undefined,
+    message: null,
+    contents: [],
   },
 })
 
-export const textSearchAtom = atom<string>({
-  key: "textSearchAtom",
-  default: "",
+export const textSearchState = atom<string | null>({
+  key: ATOM_KEY.TEXT_SEARCH_STATE,
+  default: null,
 })

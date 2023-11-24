@@ -1,4 +1,5 @@
 import { atom } from "recoil"
+import { ATOM_KEY, STATE } from "~/src/utilities"
 
 export type TPostItem = {
   id: string
@@ -6,20 +7,22 @@ export type TPostItem = {
   heightImage: number
 }
 export type TPostListState = {
-  state: "idle" | "loading" | "hasValue" | "hasError"
-  data: {
+  state: STATE
+  message: string | null
+  contents: {
     postList: TPostItem[]
-    limt: number
+    limit: number
     nextPage: number
   }
 }
 export const postListState = atom<TPostListState>({
-  key: "postListState",
+  key: ATOM_KEY.GET_POST_LIST,
   default: {
     state: "idle",
-    data: {
+    message: null,
+    contents: {
       postList: [],
-      limt: 5,
+      limit: 5,
       nextPage: 1,
     },
   },

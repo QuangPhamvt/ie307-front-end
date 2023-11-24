@@ -1,19 +1,29 @@
 import { atom } from "recoil"
-type TOriginPostAtom = {
-  state: "idle" | "hasValue" | "loading" | "hasError"
-  data?: {
-    id: string
-    title: string
-    image: string
-    authorId: string
-    authorUsername: string
-    authorAvatar: string | null
+import { ATOM_KEY, STATE } from "~/src/utilities"
+type TOriginPostState = {
+  state: STATE
+  message: null
+  contents: {
+    post_id: string | null
+    title: string | null
+    image: string | null
+    author: {
+      author_id: string
+      username: string
+      avatar: string | null
+    } | null
   }
 }
-export const originPostAtom = atom<TOriginPostAtom>({
-  key: "originPost",
+export const originPostState = atom<TOriginPostState>({
+  key: ATOM_KEY.GET_ORIGIN_POST,
   default: {
     state: "idle",
-    data: undefined,
+    message: null,
+    contents: {
+      post_id: null,
+      title: null,
+      image: null,
+      author: null,
+    },
   },
 })

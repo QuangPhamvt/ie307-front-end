@@ -3,19 +3,23 @@ import { PATH } from "./path"
 
 export const postApi = {
   postList: <T extends { limit: number; page: number }>(payload: T): Promise<any> => {
-    const url = `${PATH.POST}`
-    return axiosClient.post(url, { postList: payload })
+    const { limit, page } = payload
+    const url = PATH.POST_LIST
+    return axiosClient.post(url, { limit, page })
   },
   search: <T extends { search: string }>(payload: T): Promise<any> => {
-    const url = `${PATH.POST}`
-    return axiosClient.post(url, { search: payload })
+    const { search } = payload
+    const url = PATH.POST_SEARCH
+    return axiosClient.post(url, { search })
   },
-  originPost: <T extends { postId: string }>(payload: T): Promise<any> => {
-    const url = `${PATH.POST}`
-    return axiosClient.post(url, { originPost: payload })
+  originPost: <T extends { post_id: string }>(payload: T): Promise<any> => {
+    const { post_id } = payload
+    const url = PATH.POST_ORIGIN
+    return axiosClient.post(url, { post_id })
   },
-  uploadPost: (payload: any): Promise<any> => {
+  uploadPost: <T extends { title: string; image: string }>(payload: T): Promise<any> => {
+    const { title, image } = payload
     const url = `${PATH.POST_UPLOAD}`
-    return axiosClient.post(url, payload)
+    return axiosClient.post(url, { title, image })
   },
 }

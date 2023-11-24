@@ -34,16 +34,9 @@ export const NewPostItemComponent: React.FC<Partial<NewPostItemComponentProps>> 
   const { uri } = props
   const navigation = useNavigation()
   const lastTap = React.useRef<number>(0)
-  const handleDoubleTap = () => {
-    const now = Date.now()
-    const DELAY = 500
-    if (lastTap.current && now - lastTap.current < DELAY) {
-      navigation?.navigate("Story")
-    } else lastTap.current = now
-  }
   return (
     <View className="flex aspect-square w-screen items-center justify-around ">
-      <TouchableOpacity activeOpacity={0.9} onPress={handleDoubleTap}>
+      <TouchableOpacity activeOpacity={0.9}>
         <View className="aspect-square w-[calc(85%)]">
           <Image className="h-full w-full" source={{ uri }} />
         </View>

@@ -11,12 +11,13 @@ import { authState } from "~/src/recoil/atom"
 import { useWebSocket } from "~/src/websocket"
 import { MessageScreenHeader } from "./MessageScreen/components"
 import MessageScreen from "./MessageScreen"
+import UserScreen from "./UserSscreen"
 
 const Stack = createNativeStackNavigator<RootNativeStackParamList>()
 const Screen: React.FC = () => {
   const auth = useRecoilValue(authState)
   console.log("AuthData", auth)
-  useWebSocket(auth.data.id)
+  // useWebSocket(auth.data.id)
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
       {auth.state === "hasValue" ? (
@@ -35,6 +36,14 @@ const Screen: React.FC = () => {
               animationDuration: 300,
               headerShown: true,
               header: () => <MessageScreenHeader />,
+            }}
+          />
+          <Stack.Screen
+            name="User"
+            component={UserScreen}
+            options={{
+              animation: "default",
+              headerShown: true,
             }}
           />
         </>

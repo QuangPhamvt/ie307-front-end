@@ -1,27 +1,33 @@
 import React from "react"
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil"
-import { searchAtom, textSearchAtom } from "./atom"
+import { searchResponseState, textSearchState } from "./atom"
 import { postApi } from "~/src/api"
 
-export const useSearchPost = () => {
-  const setSearch = useSetRecoilState(searchAtom)
-  const textSearch = useRecoilValue(textSearchAtom)
-  const resetTextSearch = useResetRecoilState(textSearchAtom)
-  const submitSearch = React.useCallback(async () => {
+const useSearchPost = () => {
+  const setSearchResponseState = useSetRecoilState(searchResponseState)
+  const textSearch = useRecoilValue(textSearchState)
+  const resetTextSearch = useResetRecoilState(textSearchState)
+  const submitSearch = async () => {
     try {
-      setSearch({ state: "loading", data: undefined })
-      console.log(textSearch)
-      const response = await postApi.search({ search: textSearch })
-      if (response.data) {
-        console.log(response.data)
-        setSearch({ state: "hasValue", data: response.data.posts })
-
-        resetTextSearch()
-      }
+      if (!textSearch) throw { data: { message: "something wrong" } }
+      setSearchResponseState({ state: "isLoading", message: null, contents: [] })
+      const {
+        data: { message, data },
+      } = await postApi.search({ search: textSearch })
+      setSearchResponseState({
+        state: "hasValue",
+        message,
+        contents: data,
+      })
+      resetTextSearch()
     } catch (error: any) {
-      console.log(error)
-      setSearch({ state: "hasError", data: undefined })
+      console.log(error.data)
+      setSearchResponseState({ state: "hasError", message: error.data.message, contents: [] })
     }
-  }, [textSearch])
+  }
   return { submitSearch }
 }
+const SearchAction = {
+  useSearchPost,
+}
+export default SearchAction

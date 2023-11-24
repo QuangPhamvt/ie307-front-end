@@ -1,22 +1,20 @@
 import React from "react"
-import { HomeTabScreenProps } from "../../type"
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native"
-import { useUserAction } from "../../../hooks"
 import { useRecoilValue } from "recoil"
-import { profileSelect } from "./store/atom"
 import { ProfileHeaderComponent, UploadAvatarModalComponent } from "./components"
+import { authState } from "~/src/recoil/atom"
+import Auth from "~/src/hooks/AuthAction"
 
-interface ProfileScreenProps extends HomeTabScreenProps<"Profile"> {}
 export const HeaderProfileComponent = () => {
-  const userAction = useUserAction()
-  const profile = useRecoilValue(profileSelect)
+  const { handleLogOut } = Auth.useLogOut()
+  const { contents } = useRecoilValue(authState)
   return (
     <View className="flex w-full items-center justify-center gap-y-4 pt-8">
       <UploadAvatarModalComponent />
       <View className="flex items-center justify-center">
         <ProfileHeaderComponent />
         <View className="mt-6 flex items-center justify-center">
-          <Text className="text-3xl font-bold">{profile.username}</Text>
+          <Text className="text-3xl font-bold">{contents.username}</Text>
           <Text className="mt-2">SAN FRANCISCO, CA</Text>
         </View>
       </View>
@@ -29,7 +27,7 @@ export const HeaderProfileComponent = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            userAction.logOut()
+            handleLogOut()
           }}
           className="w-full rounded-lg border-2 border-gray-500 bg-gray-300 p-1"
         >
@@ -39,7 +37,7 @@ export const HeaderProfileComponent = () => {
     </View>
   )
 }
-export const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
+export const ProfileScreen: React.FC = () => {
   return (
     <SafeAreaView className="bg-white">
       <ScrollView className="h-full w-full bg-white p-4">

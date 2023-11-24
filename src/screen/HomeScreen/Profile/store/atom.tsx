@@ -1,32 +1,26 @@
 import { atom, selector } from "recoil"
-import { authState } from "~/src/recoil/atom"
-type TProfileSelect = {
-  username: string
-  avatar: string
+import { STATE } from "~/src/utilities"
+
+type TUploadAvatarState = {
+  state: STATE
+  message: string | null
 }
-type TUploadAvatarAtom = {
-  state: "idle" | "success" | "loading" | "hasError"
-}
-type TUploadAvatarModalAtom = {
+type TUploadAvatarModalState = {
   state: "open" | "close"
 }
-export const profileSelect = selector<{ username: string; avatar: string }>({
-  key: "profileSelect",
-  get: ({ get }) => {
-    const {
-      data: { username = "", avatar = "" },
-    } = get(authState)
-    return { username, avatar }
-  },
+export const uploadAvatarUriState = atom<string | null>({
+  key: "uploadAvatarUriState",
+  default: null,
 })
-export const uploadAvatarAtom = atom<TUploadAvatarAtom>({
+export const uploadAvatarState = atom<TUploadAvatarState>({
   key: "uploadAvatarAtom",
   default: {
     state: "idle",
+    message: null,
   },
 })
-export const uploadAvatarModalAtom = atom<TUploadAvatarModalAtom>({
-  key: "uploadAvatarModalAtom",
+export const uploadAvatarModalState = atom<TUploadAvatarModalState>({
+  key: "uploadAvatarModalStateAtom",
   default: {
     state: "close",
   },
