@@ -15,12 +15,10 @@ import UserScreen from "./UserSscreen"
 
 const Stack = createNativeStackNavigator<RootNativeStackParamList>()
 const Screen: React.FC = () => {
-  const auth = useRecoilValue(authState)
-  console.log("AuthData", auth)
-  // useWebSocket(auth.data.id)
+  const { state } = useRecoilValue(authState)
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
-      {auth.state === "hasValue" ? (
+      {state === "hasValue" ? (
         <>
           <Stack.Screen
             name="Home"

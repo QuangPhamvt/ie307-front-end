@@ -1,29 +1,24 @@
 import React from "react"
 import { ScrollView } from "react-native"
 import { useRecoilValue } from "recoil"
-import { chatAtom } from "~/src/recoil/atom"
-import { useChatAction } from "~/src/screen/HomeScreen/Chat/hook"
 import { NotificationChatItem } from "./NotificationChatItem"
+import ChatAction from "../hook"
+import { chatListState } from "../store/atom"
 
 interface NotificationChatComponentProps {}
 export const NotificationChat: React.FC<NotificationChatComponentProps> = () => {
-  const getChat = useRecoilValue(chatAtom)
-  const { useGetSummarized } = useChatAction()
+  const { state, contents } = useRecoilValue(chatListState)
+  const { handleSetChatListState } = ChatAction.useGetSummarized()
   React.useEffect(() => {
-    useGetSummarized()
+    handleSetChatListState()
   }, [])
   return (
     <ScrollView>
-      {getChat.data.summarized &&
-        getChat.data.summarized.map((items) => {
-          return (
-            <NotificationChatItem
-              key={items.receiverId}
-              userId={items.receiverId}
-              username={items.receiver}
-              message={items.message.message}
-            />
-          )
+      {state === "hasValue" &&
+        contents.length > 0 &&
+        contents.map((items) => {
+          if (!items.user || !items.message) return null
+          return <NotificationChatItem user={items.user} message={items.message} key={items.user?.user_id} />
         })}
     </ScrollView>
   )

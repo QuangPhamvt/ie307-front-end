@@ -11,7 +11,6 @@ export const BrowseImageListComponent: React.FC = () => {
   const {
     contents: { postList },
   } = useRecoilValue(postListState)
-  console.log(postList.length)
 
   return (
     <View className="mt-4">

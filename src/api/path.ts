@@ -10,4 +10,10 @@ export const PATH = {
   POST_UPLOAD: "post/upload",
   CHAT_SUMMARIZED: "/chat",
   CHAT_ORIGIN: "/chat",
+
+  FOLLOW_LIST: "follow",
+  POST_FOLLOWING: "follow/following",
+  POST_UN_FOLLOWING: "follow/un-following",
+
+  ORIGIN_USER: "user/search",
 }

@@ -11,6 +11,10 @@ const IMAGE_UPLOAD_URI_STATE = "imageUploadUriStateAtom"
 
 const TEXT_SEARCH_STATE = "textSearchStateAtom"
 
+const FOLLOW_LIST_STATE = "followListStateAtom"
+
+const ORIGIN_USER_STATE = "originUserStateAtom"
+
 const ATOM_KEY = {
   AUTH_STATE_ATOM,
 
@@ -25,5 +29,10 @@ const ATOM_KEY = {
 
   //SEARCH SCREEN
   TEXT_SEARCH_STATE,
+
+  FOLLOW_LIST_STATE,
+
+  // USER
+  ORIGIN_USER_STATE,
 }
 export default ATOM_KEY

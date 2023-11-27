@@ -1,6 +1,7 @@
 import React from "react"
-import { SetterOrUpdater, atom, useRecoilState, useSetRecoilState } from "recoil"
-import { TChatState, chatAtom } from "../recoil/atom"
+import { SetterOrUpdater, atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { TChatState, authState, chatAtom } from "../recoil/atom"
+import { websocketState } from "./store"
 
 type TWsWebsocket = {
   state: "idle" | "hasValue" | "Loading" | "hasError"
@@ -27,97 +28,55 @@ export const wsAtom = atom<TWsWebsocket>({
     },
   },
 })
-export const useWebSocket = (id?: string) => {
-  const [wsState, setWsState] = useRecoilState(wsAtom)
-  React.useEffect(() => {
-    if (!id) return
-    if (id) {
-      initialWebSocketConnect({ id, setWsState })
-    }
-  }, [id])
-  console.log("WsAtom have: ", wsState.state)
-}
-const initialWebSocketConnect = <
-  T extends {
-    id: string
-    setWsState: SetterOrUpdater<TWsWebsocket>
-  },
->(
-  props: T,
-) => {
-  const { id, setWsState } = props
+
+const connection = (id: string) => {
   const ws = new WebSocket(`ws://ws.ie307.customafk.com/websocket/${id}`)
-  ws.onopen = () => {}
-  console.log("Websocket have a message: ", id)
-  ws.onmessage = (event) => {
-    const data = JSON.parse(event.data)
-    if (data.notification) {
-      setWsState((preState) => ({
-        state: "hasValue",
-        data: {
-          chat: preState.data.chat,
-          notification: data.notification,
-        },
-      }))
-    }
-    // if (data.chat) {
-    //   console.log("message chat")
-    //   setChatAtom((preState): TChatState => {
-    //     if (
-    //       (preState.data.originChat && preState.data.originChat[0].sender_id === data.chat.sender_id) ||
-    //       (preState.data.originChat && preState.data.originChat[0].receiver_id === data.chat.sender_id)
-    //     )
-    //       return {
-    //         state: preState.state,
-    //         data: {
-    //           summarized: preState.data.summarized?.map((item) => {
-    //             if (item.receiverId === data.chat.sender_id) {
-    //               return {
-    //                 ...item,
-    //                 message: {
-    //                   message: data.chat.message,
-    //                   createAt: Date.now().toString(),
-    //                 },
-    //               }
-    //             }
-    //             return item
-    //           }),
-    //           originChat: [
-    //             {
-    //               sender_id: data.chat.sender_id,
-    //               receiver_id: id,
-    //               message: data.chat.message,
-    //               createAt: Date.now().toString(),
-    //             },
-    //             ...preState.data.originChat,
-    //           ],
-    //         },
-    //       }
-    //     return {
-    //       state: preState.state,
-    //       data: {
-    //         summarized: preState.data.summarized?.map((item) => {
-    //           if (item.receiverId === data.chat.sender_id) {
-    //             return {
-    //               ...item,
-    //               message: {
-    //                 message: data.chat.message,
-    //                 createAt: Date.now().toString(),
-    //               },
-    //             }
-    //           }
-    //           return item
-    //         }),
-    //         originChat: preState.data.originChat,
-    //       },
-    //     }
-    //   })
-    //   setWsState((preState) => ({
-    //     state: "hasValue",
-    //     data: { notification: preState.data.notification, chat: data.chat },
-    //   }))
-    // }
+  ws.onopen = () => {
+    console.log("Connected to server")
   }
-  setWsState((preState) => ({ ...preState, data: { ...preState.data, ws } }))
-  return { ws }
+  ws.onmessage = () => {
+    console.log("Have message")
+  }
+  ws.onclose = (e) => {
+    console.log("Socket is closed. Reconnect will be attempted in 1 second.", e.reason)
+    setTimeout(() => connection(id), 1000)
+  }
 }
+
+const useWebSocket = () => {
+  const {
+    state,
+    contents: { id },
+  } = useRecoilValue(authState)
+  const { state: StateWs, ws } = useRecoilValue(websocketState)
+  const setWs = useSetRecoilState(websocketState)
+  React.useEffect(() => {
+    if (state === "hasValue" && StateWs === "idle") {
+      setWs({
+        state: "hasValue",
+        ws: new WebSocket(`ws://ws.ie307.customafk.com/websocket/${id}`),
+      })
+    }
+    if (state === "hasValue" && StateWs === "hasValue" && !!ws) {
+      ws.onopen = () => {
+        console.log("Connected to the Server")
+      }
+      ws.onmessage = (event) => {
+        console.log("Listen message")
+        console.log(event)
+      }
+      ws.onclose = (e) => {
+        console.log("Socket is closed. Reconnect will be attempted in 1 second.", e.reason)
+        setTimeout(() => {
+          setWs({ state: "idle", ws: null })
+        }, 1000)
+      }
+    }
+  }, [state, StateWs])
+}
+
+const WebsocketAction = {
+  useWebSocket,
+}
+
+export default WebsocketAction
