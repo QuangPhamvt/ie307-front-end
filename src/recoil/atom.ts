@@ -29,6 +29,14 @@ export type TChatState = {
     }[]
   }
 }
+export type TFollowListState = {
+  state: STATE
+  message: string | null
+  contents: {
+    following_id: string | null
+    username: string | null
+  }[]
+}
 export const authState = atom<TAuthState>({
   key: ATOM_KEY.AUTH_STATE_ATOM,
   default: {
@@ -40,6 +48,13 @@ export const authState = atom<TAuthState>({
       avatar: null,
     },
   },
+  effects: [
+    ({ onSet }) => {
+      onSet((user) => {
+        console.debug("current user: ", user.contents)
+      })
+    },
+  ],
 })
 export const chatAtom = atom<TChatState>({
   key: "chatAtom",
@@ -50,4 +65,19 @@ export const chatAtom = atom<TChatState>({
       originChat: undefined,
     },
   },
+})
+export const followListState = atom<TFollowListState>({
+  key: ATOM_KEY.FOLLOW_LIST_STATE,
+  default: {
+    state: "idle",
+    message: null,
+    contents: [],
+  },
+  effects: [
+    ({ onSet }) => {
+      onSet((newValue) => {
+        console.debug("current follow list message: ", newValue.message)
+      })
+    },
+  ],
 })

@@ -26,4 +26,11 @@ export const postListState = atom<TPostListState>({
       nextPage: 1,
     },
   },
+  effects: [
+    ({ onSet }) => {
+      onSet((newValue) => {
+        console.debug("Curren next page: ", newValue.contents.nextPage)
+      })
+    },
+  ],
 })

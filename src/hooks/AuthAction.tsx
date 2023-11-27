@@ -1,11 +1,13 @@
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil"
-import { authState } from "../recoil/atom"
+import { authState, followListState } from "../recoil/atom"
 import { authApi } from "../api"
 import React from "react"
 import { SetAccessTokenSecureStore, SetRefreshTokenSecureStore, encodeJWT } from "../utilities"
 import { logInState } from "../screen/LogInScreen/store"
 import { registerFormState } from "~/src/screen/RegisterScreen/store"
 import { postListState } from "../screen/HomeScreen/Main/store"
+import { followApi } from "~/src/api/followApi"
+import { websocketState } from "../websocket/store"
 
 const useLogIn = () => {
   const setAuthState = useSetRecoilState(authState)
@@ -76,18 +78,40 @@ const useLogOut = () => {
   const resetRegister = useResetRecoilState(registerFormState)
   const resetAuth = useResetRecoilState(authState)
   const resetPostList = useResetRecoilState(postListState)
+  const resetFollowList = useResetRecoilState(followListState)
+  const resetWS = useResetRecoilState(websocketState)
   const handleLogOut = () => {
     resetLogIn()
     resetRegister()
     resetPostList()
+    resetFollowList()
+    resetWS()
     resetAuth()
   }
   return { handleLogOut }
+}
+
+const useGetFollowList = () => {
+  const setFollowListState = useSetRecoilState(followListState)
+  const handleGetFollowList = async () => {
+    try {
+      setFollowListState({ state: "isLoading", message: null, contents: [] })
+      const {
+        data: { data, message },
+      } = await followApi.getFollowList()
+      setFollowListState({ state: "hasValue", message, contents: data })
+    } catch (error: any) {
+      console.log(error.data)
+      setFollowListState({ state: "hasError", message: error.data.message, contents: [] })
+    }
+  }
+  return { handleGetFollowList }
 }
 
 const Auth = {
   useLogIn,
   useRegister,
   useLogOut,
+  useGetFollowList,
 }
 export default Auth

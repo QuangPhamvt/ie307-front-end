@@ -7,15 +7,22 @@ import { AntDesign, Feather } from "@expo/vector-icons"
 import { SearchScreen } from "./Search"
 import { ChatScreen } from "./Chat"
 import { UploadScreen } from "./Upload"
-import { Text, TouchableOpacity, View } from "react-native"
+import { TouchableOpacity, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { useRecoilValue } from "recoil"
 import { authState } from "../../recoil/atom"
+import Auth from "~/src/hooks/AuthAction"
+import WebsocketAction from "~/src/websocket"
 interface HomeScreenProps extends RootNativeStackScreenProps<"Home"> {}
 const Tab = createBottomTabNavigator<HomeTabParamList>()
 
 const HomeScreen = (props: HomeScreenProps) => {
-  const auth = useRecoilValue(authState)
+  const { state, contents } = useRecoilValue(authState)
+  const { handleGetFollowList } = Auth.useGetFollowList()
+  React.useEffect(() => {
+    handleGetFollowList()
+  }, [])
+  WebsocketAction.useWebSocket()
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

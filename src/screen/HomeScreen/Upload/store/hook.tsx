@@ -56,8 +56,6 @@ const useImageUpload = () => {
     state,
     contents: { title, uri },
   } = useRecoilValue(imageUploadPayloadState)
-  console.log(title)
-  console.log(uri)
 
   const resetImageUploadPayload = useResetRecoilState(imageUploadPayloadState)
   const handleImageUpload = async () => {
