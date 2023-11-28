@@ -3,20 +3,26 @@ import { View, TextInput, TouchableOpacity } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootNativeStackParamList } from "../../type"
-import { useSendMessage } from "../store/hook"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { textSendMessageAtom } from "../store"
+import MessageAction from "../store/hook"
 
 export const MessageInputComponent = () => {
-  const router = useRoute<RouteProp<RootNativeStackParamList, "Message">>()
-  const { textSendMessage, setTextSendMessage, handleSubmit } = useSendMessage(router.params.userId)
+  const {
+    params: { userId },
+  } = useRoute<RouteProp<RootNativeStackParamList, "Message">>()
+  console.log(userId)
+  const [getTextSendMessage, setTextSendMessage] = useRecoilState(textSendMessageAtom)
+  const { handleSendMessage } = MessageAction.useSendMessage()
   return (
-    <View className="flex w-full flex-row items-center justify-center rounded-lg border-2 p-2">
+    <View className="flex flex-row items-center justify-center w-full p-2 border-2 rounded-lg">
       <TextInput
-        onChangeText={(text) => setTextSendMessage(text)}
-        value={textSendMessage}
-        className="w-[95%] text-black"
+        value={getTextSendMessage.text || ""}
+        className="w-[90%] px-2 text-black"
+        onChangeText={(text) => setTextSendMessage({ state: "hasValue", text })}
       />
-      <TouchableOpacity onPress={handleSubmit}>
-        <Ionicons name="md-send-sharp" size={24} />
+      <TouchableOpacity onPress={() => handleSendMessage(userId)}>
+        <Ionicons name="md-send-sharp" size={16} />
       </TouchableOpacity>
     </View>
   )

@@ -9,7 +9,7 @@ export const PATH = {
   POST_SEARCH: "post/search",
   POST_UPLOAD: "post/upload",
   CHAT_SUMMARIZED: "/chat",
-  CHAT_ORIGIN: "/chat",
+  CHAT_ORIGIN: "chat/origin-chat",
 
   FOLLOW_LIST: "follow",
   POST_FOLLOWING: "follow/following",

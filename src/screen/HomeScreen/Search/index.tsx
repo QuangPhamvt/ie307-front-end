@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil"
 import { searchResponseState, textSearchState } from "./store"
 import SearchAction from "./store/hook"
 import { Feather } from "@expo/vector-icons"
+import { CustomImage } from "~/src/components"
 interface PostItemSearchProps {
   uri: string
 }
@@ -11,7 +12,7 @@ const PostItemSearch: React.FC<PostItemSearchProps> = (props) => {
   const { uri } = props
   return (
     <View className="m-1 w-[30%]">
-      <Image className="aspect-square w-full" source={{ uri }} />
+      <CustomImage className="w-full bg-gray-300 aspect-square" source={{ uri }} />
     </View>
   )
 }
@@ -20,7 +21,7 @@ const PostListSearch: React.FC = () => {
   if (state !== "hasValue" || !contents.length) return null
   return (
     <>
-      <View className="flex w-full flex-row flex-wrap justify-start">
+      <View className="flex flex-row flex-wrap justify-start w-full">
         {contents.map((item) => {
           return <PostItemSearch key={item.post_id} uri={item.image} />
         })}
@@ -32,13 +33,18 @@ export const SearchScreen: React.FC = () => {
   const [textSearch, setTextSearch] = useRecoilState(textSearchState)
   const { submitSearch } = SearchAction.useSearchPost()
   return (
-    <SafeAreaView className="flex w-full gap-y-2 bg-black">
-      <ScrollView showsVerticalScrollIndicator={false} className="flex bg-white px-4">
+    <SafeAreaView className="flex w-full bg-black gap-y-2">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex px-4 bg-white">
         <View className="py-4">
           <Text className="text-5xl font-light">Search</Text>
         </View>
-        <View className="flex flex-row justify-between border-2 border-black p-4">
-          <TextInput onChangeText={(text) => setTextSearch(text)} value={textSearch || ""} placeholder="search" />
+        <View className="flex flex-row justify-between p-4 border-2 border-black">
+          <TextInput
+            className="w-4/5"
+            onChangeText={(text) => setTextSearch(text)}
+            value={textSearch || ""}
+            placeholder="Search"
+          />
           <TouchableOpacity className="" onPress={submitSearch}>
             <Feather name="search" size={24} />
           </TouchableOpacity>
