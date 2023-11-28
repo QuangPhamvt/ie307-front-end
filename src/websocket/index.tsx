@@ -57,13 +57,10 @@ const useWebSocket = () => {
         ws: new WebSocket(`ws://ws.ie307.customafk.com/websocket/${id}`),
       })
     }
-    if (state === "hasValue" && StateWs === "hasValue" && !!ws) {
+    if (state === "hasValue" && StateWs === "hasValue" && ws) {
       ws.onopen = () => {
         console.log("Connected to the Server")
-      }
-      ws.onmessage = (event) => {
-        console.log("Listen message")
-        console.log(event)
+        console.log("readyState: ", ws.readyState)
       }
       ws.onclose = (e) => {
         console.log("Socket is closed. Reconnect will be attempted in 1 second.", e.reason)

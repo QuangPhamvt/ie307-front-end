@@ -9,29 +9,24 @@ export const HeaderProfileComponent = () => {
   const { handleLogOut } = Auth.useLogOut()
   const { contents } = useRecoilValue(authState)
   return (
-    <View className="flex w-full items-center justify-center gap-y-4 pt-8">
+    <View className="relative flex items-center justify-center w-full pt-8 gap-y-4">
       <UploadAvatarModalComponent />
+      <View className="absolute top-0 h-36 w-screen border-b-[1px] border-solid border-gray-300 bg-gray-400" />
       <View className="flex items-center justify-center">
         <ProfileHeaderComponent />
-        <View className="mt-6 flex items-center justify-center">
+        <View className="flex items-center justify-center mt-6">
           <Text className="text-3xl font-bold">{contents.username}</Text>
           <Text className="mt-2">SAN FRANCISCO, CA</Text>
         </View>
       </View>
       <View className="flex w-full gap-y-2">
-        <TouchableOpacity className="w-full rounded-lg bg-black p-4 ">
-          <Text className="text-center text-xl font-bold text-white">FOLLOW ME</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="w-full rounded-lg border-2 border-black bg-white p-3">
-          <Text className="text-center text-xl font-bold text-black">MESSAGE</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             handleLogOut()
           }}
-          className="w-full rounded-lg border-2 border-gray-500 bg-gray-300 p-1"
+          className="w-full p-1 bg-gray-300 border-2 border-gray-500 rounded-lg"
         >
-          <Text className="text-center text-base font-medium text-black">Log Out</Text>
+          <Text className="text-base font-medium text-center text-black">Log Out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -40,7 +35,7 @@ export const HeaderProfileComponent = () => {
 export const ProfileScreen: React.FC = () => {
   return (
     <SafeAreaView className="bg-white">
-      <ScrollView className="h-full w-full bg-white p-4">
+      <ScrollView className="w-full h-full p-4 bg-white">
         <HeaderProfileComponent />
       </ScrollView>
     </SafeAreaView>

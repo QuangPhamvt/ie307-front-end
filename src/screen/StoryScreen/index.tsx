@@ -7,6 +7,7 @@ import { useRecoilValue, useResetRecoilState } from "recoil"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import StoryAction from "./store/hook"
 import { originPostState } from "./store"
+import { authState } from "~/src/recoil/atom"
 
 const StoryScreen: React.FC = () => {
   const {
@@ -16,10 +17,12 @@ const StoryScreen: React.FC = () => {
   const resetOriginPostState = useResetRecoilState(originPostState)
   const { getOriginPost } = StoryAction.useGetOriginPost()
   const navigation = useNavigation()
+  const {
+    contents: { id },
+  } = useRecoilValue(authState)
   useEffect(() => {
     getOriginPost(postId)
   }, [postId])
-
   return (
     <SafeAreaView className="bg-black">
       {state === "hasValue" && !!contents.image && (
@@ -30,9 +33,15 @@ const StoryScreen: React.FC = () => {
             uri: `${contents.image}`,
           }}
         >
-          <View className="h-screen w-screen ">
-            <TouchableOpacity onPress={() => navigation.navigate("User", { userId: contents.author?.author_id || "" })}>
-              <View className="flex flex-row items-center justify-between opacity-90">
+          <View className="w-screen h-screen ">
+            <TouchableOpacity
+              onPress={() => {
+                if (contents.author?.author_id === id) navigation.navigate("Home", { screen: "Profile" })
+                if (contents.author?.author_id !== id)
+                  navigation.navigate("User", { userId: contents.author?.author_id || "" })
+              }}
+            >
+              <View className="flex flex-row items-center justify-between shadow-xl">
                 <AvatarOriginPostComponent
                   title={contents.title || ""}
                   authorAvatar={contents.author?.avatar || ""}

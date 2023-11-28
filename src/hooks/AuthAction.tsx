@@ -2,7 +2,7 @@ import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil"
 import { authState, followListState } from "../recoil/atom"
 import { authApi } from "../api"
 import React from "react"
-import { SetAccessTokenSecureStore, SetRefreshTokenSecureStore, encodeJWT } from "../utilities"
+import { SetAccessTokenSecureStore, SetRefreshTokenSecureStore, checkIsMail, encodeJWT } from "../utilities"
 import { logInState } from "../screen/LogInScreen/store"
 import { registerFormState } from "~/src/screen/RegisterScreen/store"
 import { postListState } from "../screen/HomeScreen/Main/store"
@@ -15,7 +15,7 @@ const useLogIn = () => {
     contents: { email, password },
   } = useRecoilValue(logInState)
 
-  const handleLogIn = React.useCallback(async () => {
+  const handleLogIn = async () => {
     try {
       setAuthState((preState) => ({ ...preState, state: "isLoading" }))
       if (!email || !password) throw { data: { message: "Some thing wrong" } }
@@ -34,9 +34,10 @@ const useLogIn = () => {
     } catch (error: any) {
       console.error("response")
       console.error(error.data)
-      setAuthState((preState) => ({ ...preState, state: "hasError", message: error.data.message }))
+      const message = error.data.message
+      setAuthState((preState) => ({ ...preState, state: "hasError", message }))
     }
-  }, [email, password])
+  }
   return { handleLogIn }
 }
 
@@ -51,6 +52,10 @@ const useRegister = () => {
       if (!email || !username || !password) {
         console.log("error")
         throw { data: { message: "Some thing wrong" } }
+      }
+      if (!checkIsMail(email)) {
+        console.log("error")
+        throw { data: { message: "Email not accept" } }
       }
       setAuthState((preState) => ({ ...preState, state: "isLoading" }))
       const {
@@ -79,14 +84,14 @@ const useLogOut = () => {
   const resetAuth = useResetRecoilState(authState)
   const resetPostList = useResetRecoilState(postListState)
   const resetFollowList = useResetRecoilState(followListState)
-  const resetWS = useResetRecoilState(websocketState)
+  const resetWebsocket = useResetRecoilState(websocketState)
   const handleLogOut = () => {
     resetLogIn()
     resetRegister()
     resetPostList()
     resetFollowList()
-    resetWS()
     resetAuth()
+    resetWebsocket()
   }
   return { handleLogOut }
 }

@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native"
 import { TouchableOpacity, Image } from "react-native"
+import { CustomImage } from "~/src/components"
 
 interface BrowseImageItemComponentProps {
   item: { id: string; image: string; heightImage: number }
@@ -10,8 +11,8 @@ export const BrowseImageItemComponent: React.FC<Partial<BrowseImageItemComponent
   const navigation = useNavigation()
   return (
     <TouchableOpacity onPress={() => navigation.navigate("Story", { postId: item.id })}>
-      <Image
-        className="m-1 rounded-md border-[1px] object-contain"
+      <CustomImage
+        className="m-1 rounded-md border-[1px] bg-slate-300 object-contain"
         height={item?.heightImage}
         source={{ uri: item?.image || "" }}
       />

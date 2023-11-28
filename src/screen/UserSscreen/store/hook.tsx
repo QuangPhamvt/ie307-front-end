@@ -70,7 +70,7 @@ const usePostUnFollowState = () => {
       setOriginUserState((preState) => ({ ...preState, state: "isLoading" }))
       const {
         data: { message },
-      } = await followApi.postFollowing({ following_id: id })
+      } = await followApi.postUnFollowing({ following_id: id })
       setOriginUserState((preState) => ({
         ...preState,
         state: "hasValue",
